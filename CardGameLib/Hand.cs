@@ -14,17 +14,28 @@ namespace CardGameLib
 
         public void AddToHand(Card card)
         {
-            Cards.Add(card);
+            _cards.Add(card);
         }
-        public Card[] ClearHand()
+        public bool ClearHand()
         {
-            return Cards.ToArray ();
+            _cards.Clear();
+            return true;
+        }
+
+        public int HandValue()
+        {
+            int handValue = 0;
+            foreach(Card card in _cards)
+            {
+                handValue += ((int)card.Value);
+            }
+            return handValue;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            foreach(Card card in Cards)
+            foreach(Card card in _cards)
             {
                 sb.Append(card.ToString());
             }

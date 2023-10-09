@@ -33,21 +33,27 @@ namespace CardGameLib
 
         public void Deal()
         {
-            foreach (Player player in _players)
-            {
-                player.Hand = new Hand();
-                player.Hand.AddToHand(_shoe.drawCard());
-            }
+            NewHand();
             foreach (Player player in _players)
             {
                 player.Hand.AddToHand(_shoe.drawCard());
-                Debug.WriteLine("Player hand: " + player.Hand.ToString());
+                player.Hand.AddToHand(_shoe.drawCard());
             }
         }
 
         public void Hit(Player player)
         {
             player.Hand.AddToHand(_shoe.drawCard());
+        }
+
+        public void NewHand()
+        {
+            foreach (Player player in _players)
+            {
+                _shoe.ReturnToShoe(player.Hand.Cards.ToArray());
+                player.Hand.ClearHand();
+
+            }
         }
 
         public Deck[] Decks { get => _decks; set => _decks = value; }

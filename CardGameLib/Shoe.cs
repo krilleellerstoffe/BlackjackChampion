@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,10 +12,10 @@ namespace CardGameLib
     {
         private List<Card> _cards = new List<Card>();
         private int _totalCards = 0;
-        private int _usedCards = 0;
+        private int _cardsSinceLastShuffle = 0;
 
-        public int TotalCards { get => _totalCards; set => _totalCards = value; }
-        public int UsedCards { get => _usedCards; set => _usedCards = value; }
+        public List<Card> Cards { get => _cards; set => _cards = value; }
+        public int CardsSinceLastShuffle { get => _cardsSinceLastShuffle; set => _cardsSinceLastShuffle = value; }
 
         public Shoe(Deck[] decks)
         {
@@ -26,32 +28,51 @@ namespace CardGameLib
             {
                 foreach (Card card in deck.Cards)
                 {
-                    _cards.Add(card);
+                    Cards.Add(card);
                 }
             }
-            TotalCards = _cards.Count;
+            _totalCards = Cards.Count;
+            
         }
         //checks if it's time to shuffle based on proportion of non-shuffled cards(4 = 1/4 = 25%; 10 = 1/10 = 10%...)
         public bool TimeToShuffle(int denominator)
         {
-            return UsedCards > (TotalCards - TotalCards / denominator);
+            return CardsSinceLastShuffle > _totalCards - _totalCards / denominator;
         }
         //only call this method when all cards returned to deck, resets used-card-counter
         public bool Shuffle()
         {   
-            if(_cards.Count != TotalCards) return false;
-            _cards.OrderBy(randomValue => new Guid());
-            UsedCards = 0;
+            //_cards.OrderBy(randomValue => new Guid());
+            var rnd = new Random();
+            var shuffledCards = Cards.OrderBy(item => rnd.Next());
+            _cards = shuffledCards.ToList();
+            CardsSinceLastShuffle = 0;
             return true;
         }
-        //if cards exist in the list, removes and return the last one
+        public bool ReturnToShoe(Card[] cards)
+        {
+            foreach(Card card in cards)
+            {
+                try
+                {
+                    Cards.Add(card);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    return false;
+                }
+            }
+            return true;
+        }
+        //if cards exist in the list, removes and returns the first one
         public Card drawCard()
         {
             try
             {
-                Card nextCard = _cards[_cards.Count -1];
-                _cards.RemoveAt(_cards.Count -1);
-                UsedCards++;
+                Card nextCard = Cards[0];
+                Cards.RemoveAt(0);
+                CardsSinceLastShuffle++;
                 return nextCard;
             }
             catch (Exception e)

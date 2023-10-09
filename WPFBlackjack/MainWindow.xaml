@@ -89,21 +89,17 @@
                             </LinearGradientBrush>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="437" Canvas.Top="162" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border x:Name="bdrDealerCardBack" BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="437" Canvas.Top="162" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="1"/>
-                                <GradientStop Color="White"/>
-                            </LinearGradientBrush>
+                            <ImageBrush ImageSource="Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCardBack" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
-                    <Border x:Name="bdrDealerCard1" BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="462" Canvas.Top="187" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1">
+                    <Border x:Name="bdrDealerCardFront" BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="462" Canvas.Top="187" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1">
                         <Border.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="1"/>
-                                <GradientStop Color="White"/>
-                            </LinearGradientBrush>
+                            <ImageBrush ImageSource="Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCardFront" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="17" Canvas.Top="436" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
@@ -121,12 +117,14 @@
                             </LinearGradientBrush>
                         </Border.Background>
                     </Border>
+                    <ListBox x:Name="lstDealerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="218" Canvas.Top="170"/>
                 </Canvas>
                 <Canvas x:Name="playerCanvas" Grid.Row="1" Background="#FFC08D8D" Panel.ZIndex="-1">
-                    <Button Content="Hit" Click="Button_Click" Canvas.Left="559" Canvas.Top="13"/>
-                    <Button Content="Stand" Click="Button_Click_1"  Canvas.Left="569" Canvas.Top="51"/>
-                    <Button Content="Surrender" Click="Button_Click_2" Canvas.Left="559" Canvas.Top="87"/>
+                    <Button x:Name="btnHit" Content="Hit" Click="btnHit_Click" Canvas.Left="487" Canvas.Top="11" Width="100" Height="40"/>
+                    <Button x:Name="btnStand" Content="Stand" Click="btnStand_Click" Canvas.Left="622" Canvas.Top="12" Width="100" Height="40"/>
+                    <Button x:Name="btnSurrender" Content="Surrender" Click="btnSurrender_Click" Canvas.Left="622" Canvas.Top="71" Width="100" Height="40"/>
                     <ListBox x:Name="lstPlayerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="272" Canvas.Top="11"/>
+                    <Label x:Name="lblHandValue" Content="Value" Canvas.Left="192" Canvas.Top="11"/>
                 </Canvas>
             </Grid>
             <Grid x:Name="infoGrid" Grid.Column="2" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
@@ -140,21 +138,20 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Label Content="Number of Decks" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                <Label Content="Cards in Shoe" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
-                <Label Content="Number of Players" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
-                <Label Content="Used cards" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="3" VerticalAlignment="Center"/>
+                <Label Content="Number of Decks" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Row="1"/>
+                <Label Content="Cards in Shoe" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
+                <Label Content="Number of Players" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center"/>
                 <Label Content="Time to shuffle" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="4" VerticalAlignment="Center"/>
                 <TextBlock x:Name="txtNumberDecks" HorizontalAlignment="Right" Margin="0,0,10,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                <Label x:Name="lblDecks" Content="Label" HorizontalAlignment="Left" Margin="180,37,0,0" VerticalAlignment="Top"/>
-                <Label x:Name="lblCardsInShoe" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="1" VerticalAlignment="Center"/>
-                <Label x:Name="lblPlayerCount" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
-                <Label x:Name="lblUsedCards" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="3" VerticalAlignment="Center"/>
+                <Label x:Name="lblDecks" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center" Grid.Row="1"/>
+                <Label x:Name="lblCardsInShoe" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
+                <Label x:Name="lblPlayerCount" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center"/>
                 <Label x:Name="lblShuffle" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="4" VerticalAlignment="Center"/>
-                <Button HorizontalAlignment="Center" Margin="0,37,0,0" Grid.Row="5" VerticalAlignment="Top">
-                    <Button x:Name="btnDeal" Content="Deal" Click="btnDeal_Click"/>
-                </Button>
-                <Button Content="Button"/>
+                <Button Grid.Row="5" x:Name="btnShuffle" Content="Shuffle" Click="btnShuffle_Click" Margin="20,10,20,10"/>
+                <Button x:Name="btnDeal" Click="btnDeal_Click" Content="Deal" Grid.Row="7" Margin="5,5,5,5"/>
+                <Label Content="Cards since last shuffle" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="3" VerticalAlignment="Center"/>
+                <Label x:Name="lblCardsSinceShuffle" Content="Label" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Margin="180,0,0,0"/>
+                <Button x:Name="btnNewhand" Click="btnNewhand_Click" Content="New Hand" Grid.Row="6" Margin="10,10,10,10"/>
             </Grid>
         </Grid>
 
