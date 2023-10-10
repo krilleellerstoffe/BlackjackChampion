@@ -24,10 +24,6 @@ namespace CardGameLib
         internal Suits Suit { get => _suit; set => _suit = value; }
         internal Values Value { get => _value; set => this._value = value; }
 
-        public string IntValueString()
-        {
-            return (int)Value + "_of_" + Suit.ToString();
-        }
         public override string ToString()
         {
             return Value + " of " + Suit.ToString();

@@ -52,18 +52,19 @@ namespace WPFBlackjack
 
             if (lstDealerCards.Items.Count > 0)
             {
-                ShowImageBasedOnCard(imgDealerCardBack, (Card)lstDealerCards.Items[0]);
+                ShowImageBasedOnCard(imgDealerCardFront, (Card)lstDealerCards.Items[0]);
             }
             else
             {
-                imgDealerCardBack.Visibility = Visibility.Hidden;
+                imgDealerCardFront.Visibility = Visibility.Hidden;
             }
         }
         
         private void ShowImageBasedOnCard(Image image, Card card)
         {
             image.Visibility = Visibility.Visible;
-            string cardString = card.IntValueString();
+            string cardString = card.ToString();
+            cardString = cardString.Replace(' ', '_');
             image.Source = new BitmapImage(new Uri("Resources/" + cardString + ".png", UriKind.Relative));
 
         }
