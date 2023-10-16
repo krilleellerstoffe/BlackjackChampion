@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CardGameLib
+﻿namespace CardGameLib
 {
     public class Deck
     {
@@ -14,9 +6,9 @@ namespace CardGameLib
 
         internal List<Card> Cards { get => _cards; set => _cards = value; }
 
-        public Deck ()
-        {            
-            _cards = new List<Card> ();
+        public Deck()
+        {
+            _cards = new List<Card>();
             createDeck();
         }
 

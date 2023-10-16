@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace CardGameLib
 {
     public class Hand
     {
-        private List<Card> _cards = new List<Card> ();
+        private List<Card> _cards = new List<Card>();
         private int _handValue = 0;
         private string _handType = "hard";   //soft if using an ace worth 1 point
 
@@ -17,6 +13,7 @@ namespace CardGameLib
         public void AddToHand(Card card)
         {
             _cards.Add(card);
+
         }
         public bool ClearHand()
         {
@@ -46,7 +43,7 @@ namespace CardGameLib
                     aces++;
                 }
             }
-            for(int i = 0; i < aces; i++) 
+            for (int i = 0; i < aces; i++)
             {
                 _handValue -= 10;
                 if (_handValue <= 21) return;
@@ -57,7 +54,7 @@ namespace CardGameLib
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            foreach(Card card in _cards)
+            foreach (Card card in _cards)
             {
                 sb.Append(card.ToString());
             }

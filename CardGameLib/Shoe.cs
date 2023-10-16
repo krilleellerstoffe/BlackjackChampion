@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace CardGameLib
 {
@@ -13,15 +7,18 @@ namespace CardGameLib
         private List<Card> _cards = new List<Card>();
         private int _totalCards = 0;
         private int _cardsSinceLastShuffle = 0;
+        private GameManager gameManager;
 
         public List<Card> Cards { get => _cards; set => _cards = value; }
         public int CardsSinceLastShuffle { get => _cardsSinceLastShuffle; set => _cardsSinceLastShuffle = value; }
 
-        public Shoe(Deck[] decks)
+        public Shoe(GameManager gameManager, Deck[] decks)
         {
+            this.gameManager = gameManager;
             AddDecksToShoe(decks);
             Shuffle();
-        } 
+        }
+
         public void AddDecksToShoe(Deck[] decks)
         {
             foreach (Deck deck in decks)
@@ -32,7 +29,7 @@ namespace CardGameLib
                 }
             }
             _totalCards = Cards.Count;
-            
+
         }
         //checks if it's time to shuffle based on proportion of non-shuffled cards(4 = 1/4 = 25%; 10 = 1/10 = 10%...)
         public bool TimeToShuffle(int denominator)
@@ -41,7 +38,7 @@ namespace CardGameLib
         }
         //only call this method when all cards returned to deck, resets used-card-counter
         public bool Shuffle()
-        {   
+        {
             //_cards.OrderBy(randomValue => new Guid());
             var rnd = new Random();
             var shuffledCards = Cards.OrderBy(item => rnd.Next());
@@ -51,7 +48,7 @@ namespace CardGameLib
         }
         public bool ReturnToShoe(Card[] cards)
         {
-            foreach(Card card in cards)
+            foreach (Card card in cards)
             {
                 try
                 {
@@ -79,7 +76,7 @@ namespace CardGameLib
             {
                 Console.WriteLine(e);
                 return null;
-            
+
             }
         }
     }

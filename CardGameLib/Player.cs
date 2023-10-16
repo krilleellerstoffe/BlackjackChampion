@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CardGameLib
+﻿namespace CardGameLib
 {
     public class Player
     {
         private Hand _hand = new Hand();
         private bool _isWinner;
         private int _funds;
+        private GameManager gameManager;
+
+        public Player(GameManager gameManager)
+        {
+            this.gameManager = gameManager;
+        }
 
         public Hand Hand { get => _hand; set => _hand = value; }
         public bool IsWinner { get => _isWinner; set => _isWinner = value; }

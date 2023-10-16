@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CardGameLib
+﻿namespace CardGameLib
 {
     public class GameManager
     {
@@ -16,7 +8,14 @@ namespace CardGameLib
         private Shoe _shoe;
         private Pot _pot;
 
-        public GameManager(int deckCount, int playerCount) 
+        public delegate void CardDrawnHandler();
+        public event CardDrawnHandler CardDrawn;
+        public delegate void StandHandler();
+        public event StandHandler Stand;
+        public delegate void BustHandler();
+        public event BustHandler Bust;
+
+        public GameManager(int deckCount, int playerCount)
         {
             _decks = new Deck[deckCount];
             for (int i = 0; i < deckCount; i++)
@@ -24,11 +23,11 @@ namespace CardGameLib
                 _decks[i] = new Deck();
             }
             _players = new Player[playerCount];
-            for (int i = 0;i < playerCount; i++)
+            for (int i = 0; i < playerCount; i++)
             {
-                _players[i] = new Player();
+                _players[i] = new Player(this);
             }
-            _shoe = new Shoe(_decks);
+            _shoe = new Shoe(this, _decks);
         }
 
         public void Deal()
@@ -37,13 +36,28 @@ namespace CardGameLib
             foreach (Player player in _players)
             {
                 player.Hand.AddToHand(_shoe.drawCard());
+                CardDrawn();
+            }
+            foreach (Player player in _players)
+            {
                 player.Hand.AddToHand(_shoe.drawCard());
+                CardDrawn();
             }
         }
 
         public void Hit(Player player)
         {
             player.Hand.AddToHand(_shoe.drawCard());
+            CardDrawn();
+            CheckIfBust(player);
+        }
+
+        private void CheckIfBust(Player player)
+        {
+            if (player.Hand.HandValue() > 21)
+            {
+                Bust();
+            }
         }
 
         public void NewHand()

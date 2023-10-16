@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CardGameLib;
+using System;
+using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using CardGameLib;
 
 namespace WPFBlackjack
 {
@@ -23,24 +14,37 @@ namespace WPFBlackjack
     public partial class MainWindow : Window
     {
         private GameManager gameManager;
+
         public MainWindow()
         {
             InitializeComponent();
             gameManager = new GameManager(2, 3);
-            updateLabels();
+            updateLabelsAndImages();
+            //subscribe to events in gamemanager
+            gameManager.CardDrawn += updateLabelsAndImages;
+            gameManager.Stand += updateLabelsAndImages; //add stand method
+            gameManager.Bust += updateLabelsAndImages; //add bust method
+            gameManager.Bust += ShowBustMessage;
+        }
+        public void ShowBustMessage()
+        {
+            MessageBox.Show("BUST!");
+        }
+        private void updateLabelsAndImages()
+        {
+            UpdateInfoLabels();
+            UpdateDealerCards();
+            UpdatePlayerCards();
+
         }
 
-        private void updateLabels()
+        private void UpdateInfoLabels()
         {
-            //adjust these so that the methods are in gamemanager, limiting exposure of BLL classes?
             lblCardsInShoe.Content = gameManager.Shoe.Cards.Count;
             lblDecks.Content = gameManager.Decks.Length;
             lblPlayerCount.Content = gameManager.Players.Length;
             lblCardsSinceShuffle.Content = gameManager.Shoe.CardsSinceLastShuffle;
             lblShuffle.Content = gameManager.Shoe.TimeToShuffle(4);
-            UpdateDealerCards();
-            UpdatePlayerCards();
-
         }
         private void UpdateDealerCards()
         {
@@ -48,7 +52,7 @@ namespace WPFBlackjack
             foreach (Card card in gameManager.Players[0].Hand.Cards)
             {
                 lstDealerCards.Items.Add(card);
-            }            
+            }
 
             if (lstDealerCards.Items.Count > 0)
             {
@@ -59,7 +63,7 @@ namespace WPFBlackjack
                 imgDealerCardFront.Visibility = Visibility.Hidden;
             }
         }
-        
+
         private void ShowImageBasedOnCard(Image image, Card card)
         {
             image.Visibility = Visibility.Visible;
@@ -75,8 +79,15 @@ namespace WPFBlackjack
             {
                 lstPlayerCards.Items.Add(card);
             }
+            for (int i = 0; i < lstPlayerCards.Items.Count; i++)
+            {
+                //maybe create image here instead of finding in canvas
+                ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer1Card" + (i + 1)), (Card)lstPlayerCards.Items[i]);
+
+            }
+            if (lstPlayerCards.Items.Count >= 7) btnHit.IsEnabled = false;
             lblHandValue.Content = gameManager.Players[1].Hand.HandValue();
-                        
+
         }
 
         private void btnDeal_Click(object sender, RoutedEventArgs e)
@@ -85,22 +96,13 @@ namespace WPFBlackjack
             btnDeal.IsEnabled = false;
             btnNewhand.IsEnabled = true;
             btnHit.IsEnabled = true;
-            updateLabels();
         }
 
 
 
-        private void btnShuffle_Click(object sender, RoutedEventArgs e)
-        {
-            gameManager.Shoe.Shuffle();
-            updateLabels();
-        }
+        private void btnShuffle_Click(object sender, RoutedEventArgs e) => gameManager.Shoe.Shuffle();
 
-        private void btnHit_Click(object sender, RoutedEventArgs e)
-        {
-            gameManager.Hit(gameManager.Players[1]);
-            updateLabels();
-        }
+        private void btnHit_Click(object sender, RoutedEventArgs e) => gameManager.Hit(gameManager.Players[1]);
 
         private void btnStand_Click(object sender, RoutedEventArgs e)
         {
@@ -119,7 +121,6 @@ namespace WPFBlackjack
             btnDeal.IsEnabled = true;
             btnNewhand.IsEnabled = false;
             btnHit.IsEnabled = false;
-            updateLabels();
         }
     }
 }
