@@ -25,179 +25,179 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Canvas x:Name="tableCanvas" Background="#FF629765">
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="550" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Center" Panel.ZIndex="1">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="558" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1">
                         <Border.Background>
                             <ImageBrush ImageSource="Resources/back.jpg"/>
                         </Border.Background>
                         <Image x:Name="imgDealerCardFront" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
-                    <ListBox x:Name="lstDealerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="345" Canvas.Top="152"/>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="340" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <ListBox x:Name="lstDealerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" VerticalAlignment="Center" Canvas.Left="390" Canvas.Top="124" HorizontalAlignment="Center" Visibility="Hidden"/>
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="348" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="375" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="383" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="410" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="418" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="445" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="453" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="480" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="488" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="515" Canvas.Top="35" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="523" Canvas.Top="263" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="17" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="17" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="52" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="52" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="87" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="87" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="122" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="122" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="157" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="157" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="192" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="192" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="227" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="227" Canvas.Top="172" HorizontalAlignment="Center" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="628" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="628" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="663" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="663" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="698" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="698" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="733" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="733" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="768" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="768" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="803" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="803" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="838" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="838" Canvas.Top="172" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="135" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="135" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="170" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="170" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="205" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="205" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="240" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="240" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="275" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="275" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="310" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="310" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="345" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="345" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="609" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="609" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="644" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="644" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="679" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="679" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="714" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="714" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="749" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="749" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="784" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="784" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
                     </Border>
-                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="819" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="819" Canvas.Top="313" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
@@ -249,8 +249,8 @@
                     <Button x:Name="btnHit" Content="Hit" Click="btnHit_Click" Canvas.Left="709" Canvas.Top="10" Width="100" Height="40"/>
                     <Button x:Name="btnStand" Content="Stand" Click="btnStand_Click" Canvas.Left="834" Canvas.Top="10" Width="100" Height="40"/>
                     <Button x:Name="btnSurrender" Content="Surrender" Click="btnSurrender_Click" Canvas.Left="834" Canvas.Top="71" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <ListBox x:Name="lstPlayerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="458" Canvas.Top="11"/>
-                    <Label x:Name="lblHandValue" Content="Value" Canvas.Left="396" Canvas.Top="12"/>
+                    <ListBox x:Name="lstPlayerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="458" Canvas.Top="11" Visibility="Hidden"/>
+                    <Label x:Name="lblHandValue" Content="Value" Canvas.Left="396" Canvas.Top="12" FontSize="72"/>
                 </Canvas>
             </Grid>
             <Grid x:Name="infoGrid" Grid.Column="2" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">

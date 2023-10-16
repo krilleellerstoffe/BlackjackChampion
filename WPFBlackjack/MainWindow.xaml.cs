@@ -74,6 +74,10 @@ namespace WPFBlackjack
         }
         private void UpdatePlayerCards()
         {
+            for (int i = 0; i < lstPlayerCards.Items.Count; i++)
+            {
+                ((Image)tableCanvas.FindName("imgPlayer1Card" + (i + 1))).Visibility = Visibility.Hidden;
+            }
             lstPlayerCards.Items.Clear();
             foreach (Card card in gameManager.Players[1].Hand.Cards)
             {
@@ -83,7 +87,6 @@ namespace WPFBlackjack
             {
                 //maybe create image here instead of finding in canvas
                 ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer1Card" + (i + 1)), (Card)lstPlayerCards.Items[i]);
-
             }
             if (lstPlayerCards.Items.Count >= 7) btnHit.IsEnabled = false;
             lblHandValue.Content = gameManager.Players[1].Hand.HandValue();
@@ -121,6 +124,7 @@ namespace WPFBlackjack
             btnDeal.IsEnabled = true;
             btnNewhand.IsEnabled = false;
             btnHit.IsEnabled = false;
+            updateLabelsAndImages();
         }
     }
 }
