@@ -1,4 +1,6 @@
-﻿namespace CardGameLib
+﻿using System.Numerics;
+
+namespace CardGameLib
 {
     public class GameManager
     {
@@ -6,7 +8,8 @@
         private Deck[] _decks;
         private Player[] _players;
         private Shoe _shoe;
-        private Pot _pot;
+        private int _pot;
+        private int _betAmount;
 
         public delegate void CardDrawnHandler();
         public event CardDrawnHandler CardDrawn;
@@ -27,6 +30,8 @@
                 _players[i] = new Player(this);
             }
             _shoe = new Shoe(this, _decks);
+            _pot = 0;
+            _betAmount = 10; //hardcoded for now, will add option to change
         }
 
         public void Deal()
@@ -34,13 +39,18 @@
             NewHand();
             foreach (Player player in _players)
             {
-                player.Hand.AddToHand(_shoe.drawCard());
-                CardDrawn();
+                if (player.PlayerState == Player.PlayerStates.InPlay)
+                {
+                    Hit(player);
+                }
+                
             }
             foreach (Player player in _players)
             {
-                player.Hand.AddToHand(_shoe.drawCard());
-                CardDrawn();
+                if (player.PlayerState == Player.PlayerStates.InPlay)
+                {
+                    Hit(player);
+                }
             }
         }
         public void Stand(int playerNumber)
@@ -103,18 +113,48 @@
 
         public void NewHand()
         {
+            SplitPotToWinners();
             foreach (Player player in _players)
             {
                 _shoe.ReturnToShoe(player.Hand.Cards.ToArray());
-                player.Hand.ClearHand();
-                player.PlayerState = Player.PlayerStates.InPlay;
+                player.Hand.ClearHand();                
+                if (player.Funds > _betAmount)
+                {
+                    player.Funds -= _betAmount;
+                    _pot += _betAmount;
+                    player.PlayerState = Player.PlayerStates.InPlay;
+                }
+                else
+                {
+                    player.PlayerState = Player.PlayerStates.OutOfPlay;
+                }
 
             }
+        }
+
+        private void SplitPotToWinners()
+        {
+            int winners = 0;
+            foreach (Player player in _players)
+            {                
+                if (player.PlayerState == Player.PlayerStates.Winner)
+                {
+                    winners++;
+                }
+            }
+            foreach (Player player in _players)
+            {
+                if (player.PlayerState == Player.PlayerStates.Winner)
+                {
+                    player.Funds += _pot / winners;
+                }
+            }
+            _pot = 0;
         }
 
         public Deck[] Decks { get => _decks; set => _decks = value; }
         public Player[] Players { get => _players; set => _players = value; }
         public Shoe Shoe { get => _shoe; set => _shoe = value; }
-        public Pot Pot { get => _pot; set => _pot = value; }
+        public int Pot { get => _pot; set => _pot = value; }
     }
 }

@@ -12,15 +12,27 @@ namespace WPFBlackjack
     public partial class MainWindow : Window
     {
         private GameManager gameManager;
+        private setup setupWindow;
+        private int _decks;
+        private int _players;
+
+        public int Decks { get => _decks; set => _decks = value; }
+        public int Players { get => _players; set => _players = value; }
 
         public MainWindow()
         {
             InitializeComponent();
-            gameManager = new GameManager(1, 2);
-            updateLabelsAndImages();
+            setupWindow = new setup(this);
+        }
+
+        public void StartGame()
+        {
+            gameManager = new GameManager(_decks, _players);
             //subscribe to events in gamemanager
             gameManager.CardDrawn += updateLabelsAndImages;
             gameManager.Bust += ShowBustMessage;
+            btnDeal.IsEnabled = true;
+            updateLabelsAndImages();
         }
         public void ShowBustMessage(Player player)
         {
@@ -70,20 +82,24 @@ namespace WPFBlackjack
         }
         private void UpdatePlayerCards()
         {
-            for (int i = 0; i < lstPlayerCards.Items.Count; i++)
+            for (int j = 1; j < gameManager.Players.Length; j++)
             {
-                ((Image)tableCanvas.FindName("imgPlayer1Card" + (i + 1))).Visibility = Visibility.Hidden;
+                ListBox playerCards = (ListBox)playerCanvas.FindName("lstPlayer" + j + "Cards");
+                for (int i = 0; i < playerCards.Items.Count; i++)
+                {
+                    ((Image)tableCanvas.FindName("imgPlayer" + j + "Card" + (i + 1))).Visibility = Visibility.Hidden;
+                }
+                playerCards.Items.Clear();
+                foreach (Card card in gameManager.Players[j].Hand.Cards)
+                {
+                    playerCards.Items.Add(card);
+                }
+                for (int i = 0; i < playerCards.Items.Count; i++)
+                {
+                    ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer" + j +"Card" + (i + 1)), (Card)playerCards.Items[i]);
+                }
             }
-            lstPlayerCards.Items.Clear();
-            foreach (Card card in gameManager.Players[1].Hand.Cards)
-            {
-                lstPlayerCards.Items.Add(card);
-            }
-            for (int i = 0; i < lstPlayerCards.Items.Count; i++)
-            {
-                ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer1Card" + (i + 1)), (Card)lstPlayerCards.Items[i]);
-            }
-            if (lstPlayerCards.Items.Count >= 7) btnHit.IsEnabled = false;
+            if (lstPlayer1Cards.Items.Count >= 7) btnHit.IsEnabled = false;
             lblHandValue.Content = gameManager.Players[1].Hand.HandValue();
 
         }
@@ -92,17 +108,27 @@ namespace WPFBlackjack
         {
             gameManager.Deal();
             btnDeal.IsEnabled = false;
-            btnNewhand.IsEnabled = true;
             btnHit.IsEnabled = true;
+            btnStand.IsEnabled = true;
+            btnSurrender.IsEnabled = true;
         }
 
 
 
         private void btnShuffle_Click(object sender, RoutedEventArgs e) => gameManager.Shoe.Shuffle();
 
-        private void btnHit_Click(object sender, RoutedEventArgs e) => gameManager.Hit(gameManager.Players[1]);
+        private void btnHit_Click(object sender, RoutedEventArgs e)
+        {
+            btnSurrender.IsEnabled = false;
+            gameManager.Hit(gameManager.Players[1]);
+        }
 
-        private void btnStand_Click(object sender, RoutedEventArgs e) => gameManager.Stand(1);
+        private void btnStand_Click(object sender, RoutedEventArgs e)
+        {
+            btnHit.IsEnabled = false;
+            btnStand.IsEnabled = false;
+            gameManager.Stand(1);
+        }
 
         private void btnSurrender_Click(object sender, RoutedEventArgs e)
         {
@@ -118,5 +144,9 @@ namespace WPFBlackjack
             btnHit.IsEnabled = false;
             updateLabelsAndImages();
         }
+
+
+        private void btnNewgame_Click(object sender, RoutedEventArgs e) => setupWindow.Show();
+        
     }
 }

@@ -11,6 +11,7 @@
         public Player(GameManager gameManager)
         {
             this.gameManager = gameManager;
+            _funds = 100;
         }
 
         public Hand Hand { get => _hand; set => _hand = value; }
@@ -40,7 +41,9 @@
         {
             Standing,
             Bust,
-            InPlay
+            InPlay,
+            OutOfPlay,
+            Winner
         }
     }
 }
