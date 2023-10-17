@@ -1,9 +1,7 @@
 ﻿using CardGameLib;
 using System;
-using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace WPFBlackjack
@@ -18,15 +16,13 @@ namespace WPFBlackjack
         public MainWindow()
         {
             InitializeComponent();
-            gameManager = new GameManager(2, 3);
+            gameManager = new GameManager(1, 2);
             updateLabelsAndImages();
             //subscribe to events in gamemanager
             gameManager.CardDrawn += updateLabelsAndImages;
-            gameManager.Stand += updateLabelsAndImages; //add stand method
-            gameManager.Bust += updateLabelsAndImages; //add bust method
             gameManager.Bust += ShowBustMessage;
         }
-        public void ShowBustMessage()
+        public void ShowBustMessage(Player player)
         {
             MessageBox.Show("BUST!");
         }
@@ -42,7 +38,7 @@ namespace WPFBlackjack
         {
             lblCardsInShoe.Content = gameManager.Shoe.Cards.Count;
             lblDecks.Content = gameManager.Decks.Length;
-            lblPlayerCount.Content = gameManager.Players.Length;
+            lblPlayerCount.Content = gameManager.Players.Length-1;
             lblCardsSinceShuffle.Content = gameManager.Shoe.CardsSinceLastShuffle;
             lblShuffle.Content = gameManager.Shoe.TimeToShuffle(4);
         }
@@ -85,7 +81,6 @@ namespace WPFBlackjack
             }
             for (int i = 0; i < lstPlayerCards.Items.Count; i++)
             {
-                //maybe create image here instead of finding in canvas
                 ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer1Card" + (i + 1)), (Card)lstPlayerCards.Items[i]);
             }
             if (lstPlayerCards.Items.Count >= 7) btnHit.IsEnabled = false;
@@ -107,10 +102,7 @@ namespace WPFBlackjack
 
         private void btnHit_Click(object sender, RoutedEventArgs e) => gameManager.Hit(gameManager.Players[1]);
 
-        private void btnStand_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        private void btnStand_Click(object sender, RoutedEventArgs e) => gameManager.Stand(1);
 
         private void btnSurrender_Click(object sender, RoutedEventArgs e)
         {

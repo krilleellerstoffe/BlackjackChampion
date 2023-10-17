@@ -10,9 +10,7 @@
 
         public delegate void CardDrawnHandler();
         public event CardDrawnHandler CardDrawn;
-        public delegate void StandHandler();
-        public event StandHandler Stand;
-        public delegate void BustHandler();
+        public delegate void BustHandler(Player player);
         public event BustHandler Bust;
 
         public GameManager(int deckCount, int playerCount)
@@ -22,8 +20,9 @@
             {
                 _decks[i] = new Deck();
             }
-            _players = new Player[playerCount];
-            for (int i = 0; i < playerCount; i++)
+            //player[0] is always the dealer
+            _players = new Player[playerCount+1];
+            for (int i = 0; i < _players.Length; i++)
             {
                 _players[i] = new Player(this);
             }
@@ -44,6 +43,28 @@
                 CardDrawn();
             }
         }
+        public void Stand(int playerNumber)
+        {
+            _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
+            //next player hit/stand (if exists)
+            if (_players.Length > playerNumber+1)
+            {
+                AIHit(playerNumber + 1);
+            }
+            //dealer hit/stand
+            DealerHit();
+            //winner declared
+            //points from pot
+        }
+
+        private void DealerHit()
+        {
+            Player dealer = _players[0];
+            if (dealer.Hand.HandValue() <= 17)
+            {
+                Hit(dealer);
+            }
+        }
 
         public void Hit(Player player)
         {
@@ -51,12 +72,32 @@
             CardDrawn();
             CheckIfBust(player);
         }
+        //hit if hand under 18, then stand/bust
+        public void AIHit(int playerNumber)
+        {
+            Player AIPlayer = _players[playerNumber];
+            if (AIPlayer.Hand.HandValue() >= 17)
+            {
+                Stand(playerNumber);
+            }
+            else
+            {
+                Hit(AIPlayer);
+            }
+            //if not bust or standing, test whether to hit again
+            if (AIPlayer.PlayerState == Player.PlayerStates.InPlay)
+            {
+                AIHit(playerNumber);
+            }
+            
+        }
 
         private void CheckIfBust(Player player)
         {
             if (player.Hand.HandValue() > 21)
             {
-                Bust();
+                player.PlayerState = Player.PlayerStates.Bust;
+                Bust(player);
             }
         }
 
@@ -66,6 +107,7 @@
             {
                 _shoe.ReturnToShoe(player.Hand.Cards.ToArray());
                 player.Hand.ClearHand();
+                player.PlayerState = Player.PlayerStates.InPlay;
 
             }
         }
