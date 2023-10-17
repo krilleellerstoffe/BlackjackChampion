@@ -56,13 +56,13 @@ namespace WPFBlackjack
             gameManager.Stand(1);
             btnNewhand.IsEnabled = true;
             btnSurrender.IsEnabled = false;
-            updateLabelsAndImages(null);
+            //updateLabelsAndImages(null);
 
         }
 
         public void ShowBustMessage(Player player)
         {
-            updateLabelsAndImages(player);
+            //updateLabelsAndImages(player);
             if (player.PlayerNumber == 1) MessageBox.Show(player.PlayerName + " BUST!");
         }
 
@@ -171,7 +171,7 @@ namespace WPFBlackjack
 
         private void btnSurrender_Click(object sender, RoutedEventArgs e)
         {
-
+            gameManager.Surrender();
         }
 
         private void btnNewhand_Click(object sender, RoutedEventArgs e)

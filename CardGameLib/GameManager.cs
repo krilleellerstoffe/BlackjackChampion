@@ -96,7 +96,7 @@ namespace CardGameLib
             for (int i = 0; i < _players.Length; i++)
             {
                 int handValue = _players[i].Hand.HandValue();
-                if ((handValue > winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust)
+                if ((handValue > winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust && _players[i].PlayerState != Player.PlayerStates.OutOfPlay)
                 {
                     winningScore = handValue;
                 }
@@ -104,7 +104,7 @@ namespace CardGameLib
             for (int i = 0; i < _players.Length; i++)
             {
                 int handValue = _players[i].Hand.HandValue();
-                if ((handValue == winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust)
+                if ((handValue == winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust && _players[i].PlayerState != Player.PlayerStates.OutOfPlay)
                 {
                     _players[i].PlayerState = Player.PlayerStates.Winner;
                     winners.Add(_players[i]);
@@ -205,6 +205,14 @@ namespace CardGameLib
         public bool TimeToShuffle(int denominator)
         {
             return _shoe.TimeToShuffle(denominator);
+        }
+
+        public void Surrender()
+        {
+            _players[1].PlayerState = Player.PlayerStates.OutOfPlay;
+            _pot -= _betAmount / 2;
+            _players[1].Funds += _betAmount / 2;
+            Stand(1);
         }
 
         public Deck[] Decks { get => _decks; set => _decks = value; }

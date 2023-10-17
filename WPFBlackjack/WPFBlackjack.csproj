@@ -35,6 +35,7 @@
     <None Remove="Resources\king_of_diamonds.png" />
     <None Remove="Resources\king_of_hearts.png" />
     <None Remove="Resources\king_of_spades.png" />
+    <None Remove="Resources\nine_of_clubs.png" />
     <None Remove="Resources\nine_of_diamonds.png" />
     <None Remove="Resources\nine_of_hearts.png" />
     <None Remove="Resources\nine_of_spades.png" />
@@ -70,6 +71,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\nine_of_clubs.png" />
     <Resource Include="Resources\ten_of_clubs.png" />
     <Resource Include="Resources\ten_of_diamonds.png" />
     <Resource Include="Resources\ten_of_hearts.png" />
