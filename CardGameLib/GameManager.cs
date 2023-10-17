@@ -1,4 +1,7 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
+using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace CardGameLib
 {
@@ -10,11 +13,16 @@ namespace CardGameLib
         private Shoe _shoe;
         private int _pot;
         private int _betAmount;
+        private bool _winnersDeclared = false;
 
-        public delegate void CardDrawnHandler();
+        public delegate void CardDrawnHandler(object obj);
         public event CardDrawnHandler CardDrawn;
+        public delegate StandHandler StandHandler(Player player);
+        public event StandHandler Standing;
         public delegate void BustHandler(Player player);
         public event BustHandler Bust;
+        public delegate void ResultsHandler(List<Player> winners);
+        public event ResultsHandler Results;
 
         public GameManager(int deckCount, int playerCount)
         {
@@ -24,82 +32,119 @@ namespace CardGameLib
                 _decks[i] = new Deck();
             }
             //player[0] is always the dealer
-            _players = new Player[playerCount+1];
+            _players = new Player[playerCount + 1];
             for (int i = 0; i < _players.Length; i++)
             {
                 _players[i] = new Player(this);
+                _players[i].PlayerNumber = i;
+                _players[i].PlayerName = "Player " + i;
+                if (i == 0) _players[i].PlayerName = "Dealer";
             }
             _shoe = new Shoe(this, _decks);
             _pot = 0;
             _betAmount = 10; //hardcoded for now, will add option to change
         }
 
-        public void Deal()
+        public async Task Deal()
         {
             NewHand();
             foreach (Player player in _players)
             {
                 if (player.PlayerState == Player.PlayerStates.InPlay)
                 {
-                    Hit(player);
+                    await Hit(player);
                 }
-                
+
             }
             foreach (Player player in _players)
             {
                 if (player.PlayerState == Player.PlayerStates.InPlay)
                 {
-                    Hit(player);
+                    await Hit(player);
                 }
             }
         }
         public void Stand(int playerNumber)
         {
-            _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
+            //only change state to standing if not bust, declared winner, or surrendered
+            if (_players[playerNumber].PlayerState == Player.PlayerStates.InPlay)
+            {
+                _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
+            }
+            //if dealer calls stand, set winners and exit loop
+            if (playerNumber == 0)
+            {
+                if (_winnersDeclared) return;
+                SetWinners();
+                return;
+            }
             //next player hit/stand (if exists)
-            if (_players.Length > playerNumber+1)
+            if (_players.Length > playerNumber + 1)
             {
                 AIHit(playerNumber + 1);
             }
-            //dealer hit/stand
-            DealerHit();
+            //otherwise let the dealer finish
+            AIHit(0);
             //winner declared
             //points from pot
         }
 
-        private void DealerHit()
+        private void SetWinners()
         {
-            Player dealer = _players[0];
-            if (dealer.Hand.HandValue() <= 17)
+            int winningScore = 0;
+            List<Player> winners = new List<Player>();
+            for (int i = 0; i < _players.Length; i++)
             {
-                Hit(dealer);
+                int handValue = _players[i].Hand.HandValue();
+                if ((handValue > winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust)
+                {
+                    winningScore = handValue;
+                }
             }
+            for (int i = 0; i < _players.Length; i++)
+            {
+                int handValue = _players[i].Hand.HandValue();
+                if ((handValue == winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust)
+                {
+                    _players[i].PlayerState = Player.PlayerStates.Winner;
+                    winners.Add(_players[i]);
+                }
+            }
+            _winnersDeclared = true;
+            if (Results != null)
+            {
+                Results(winners);
+            }
+            Debug.WriteLine("Winning score: " + winningScore);
+            Debug.WriteLine("Winning players:");
+            foreach (Player player in winners)
+            {
+                Debug.WriteLine(player.PlayerName);
+            }
+
         }
 
-        public void Hit(Player player)
+        public async Task Hit(Player player)
         {
+            await Task.Delay(200);
             player.Hand.AddToHand(_shoe.drawCard());
-            CardDrawn();
+            if (CardDrawn != null)
+            {
+                CardDrawn(player);
+            }
             CheckIfBust(player);
         }
+
         //hit if hand under 18, then stand/bust
-        public void AIHit(int playerNumber)
+        public async void AIHit(int playerNumber)
         {
             Player AIPlayer = _players[playerNumber];
-            if (AIPlayer.Hand.HandValue() >= 17)
+            while (AIPlayer.Hand.HandValue() < 18)
             {
-                Stand(playerNumber);
+                await Hit(AIPlayer);
             }
-            else
-            {
-                Hit(AIPlayer);
-            }
-            //if not bust or standing, test whether to hit again
-            if (AIPlayer.PlayerState == Player.PlayerStates.InPlay)
-            {
-                AIHit(playerNumber);
-            }
-            
+            Stand(playerNumber);
+
         }
 
         private void CheckIfBust(Player player)
@@ -107,8 +152,13 @@ namespace CardGameLib
             if (player.Hand.HandValue() > 21)
             {
                 player.PlayerState = Player.PlayerStates.Bust;
-                Bust(player);
+                if (Bust != null)
+                {
+                    Bust(player);
+                }
+                Stand(1);
             }
+            
         }
 
         public void NewHand()
@@ -117,7 +167,7 @@ namespace CardGameLib
             foreach (Player player in _players)
             {
                 _shoe.ReturnToShoe(player.Hand.Cards.ToArray());
-                player.Hand.ClearHand();                
+                player.Hand.ClearHand();
                 if (player.Funds > _betAmount)
                 {
                     player.Funds -= _betAmount;
@@ -136,7 +186,7 @@ namespace CardGameLib
         {
             int winners = 0;
             foreach (Player player in _players)
-            {                
+            {
                 if (player.PlayerState == Player.PlayerStates.Winner)
                 {
                     winners++;
@@ -150,6 +200,11 @@ namespace CardGameLib
                 }
             }
             _pot = 0;
+        }
+
+        public bool TimeToShuffle(int denominator)
+        {
+            return _shoe.TimeToShuffle(denominator);
         }
 
         public Deck[] Decks { get => _decks; set => _decks = value; }

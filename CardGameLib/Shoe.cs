@@ -41,8 +41,16 @@ namespace CardGameLib
         {
             //_cards.OrderBy(randomValue => new Guid());
             var rnd = new Random();
+            foreach (Card card in _cards)
+            {
+                Debug.WriteLine(card);
+            }
             var shuffledCards = Cards.OrderBy(item => rnd.Next());
             _cards = shuffledCards.ToList();
+            foreach (Card card in _cards)
+            {
+                Debug.WriteLine(card);
+            }
             CardsSinceLastShuffle = 0;
             return true;
         }

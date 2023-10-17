@@ -18,6 +18,38 @@
         internal Suits Suit { get => _suit; set => _suit = value; }
         internal Values Value { get => _value; set => this._value = value; }
 
+        public int Score()
+        {
+                switch (_value)
+                {
+                    case Values.two:
+                        return 2;
+                    case Values.three:
+                        return 3;
+                    case Values.four:
+                        return 4;
+                    case Values.five:
+                        return 5;
+                    case Values.six:
+                        return 6;
+                    case Values.seven:
+                        return 7;
+                    case Values.eight:
+                        return 8;
+                    case Values.nine:
+                        return 9;
+                    case Values.ten:
+                    case Values.jack:
+                    case Values.queen:
+                    case Values.king:
+                        return 10;
+                    case Values.ace:
+                        return 11;
+                    default: return 0;
+                }
+            
+        }
+
         public override string ToString()
         {
             return Value + " of " + Suit.ToString();
