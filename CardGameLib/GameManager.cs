@@ -126,7 +126,7 @@ namespace CardGameLib
 
         public async Task Hit(Player player)
         {
-            await Task.Delay(200);
+            await Task.Delay(100);
             player.Hand.AddToHand(_shoe.drawCard());
             if (CardDrawn != null)
             {
@@ -164,6 +164,7 @@ namespace CardGameLib
         public void NewHand()
         {
             SplitPotToWinners();
+            _winnersDeclared = false;
             foreach (Player player in _players)
             {
                 _shoe.ReturnToShoe(player.Hand.Cards.ToArray());

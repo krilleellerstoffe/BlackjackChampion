@@ -33,13 +33,15 @@ namespace WPFBlackjack
         {
             gameManager = new GameManager(_decks, _players);
             //subscribe to events in gamemanager
-            gameManager.CardDrawn += updateLabelsAndImages;
+            gameManager.CardDrawn += UpdateInfoLabels;
+            gameManager.CardDrawn += UpdateDealerCards;
+            gameManager.CardDrawn += UpdatePlayerCards;
             gameManager.Bust += ShowBustMessage;
-            gameManager.Bust += updateLabelsAndImages;
+            gameManager.Bust += UpdateInfoLabels;
             gameManager.Results += ShowWinners;
-            gameManager.Results += updateLabelsAndImages;
+            gameManager.Results += UpdateInfoLabels;
             btnDeal.IsEnabled = true;
-            updateLabelsAndImages(null);
+            UpdateInfoLabels(null);
         }
 
         private async void ShowWinners(List<Player> winners)
@@ -66,15 +68,8 @@ namespace WPFBlackjack
             if (player.PlayerNumber == 1) MessageBox.Show(player.PlayerName + " BUST!");
         }
 
-        private void updateLabelsAndImages(object? obj)
-        {
-            UpdateInfoLabels();
-            UpdateDealerCards();
-            UpdatePlayerCards();
 
-        }
-
-        private void UpdateInfoLabels()
+        private void UpdateInfoLabels(object? obj)
         {
             lblCardsInShoe.Content = gameManager.Shoe.Cards.Count;
             lblDecks.Content = gameManager.Decks.Length;
@@ -89,7 +84,7 @@ namespace WPFBlackjack
             }
         }
         //dealer gets a special method as we don't want to reveal more than the first card
-        private void UpdateDealerCards()
+        private void UpdateDealerCards(object? obj)
         {
             lstDealerCards.Items.Clear();
             foreach (Card card in gameManager.Players[0].Hand.Cards)
@@ -115,7 +110,7 @@ namespace WPFBlackjack
             image.Source = new BitmapImage(new Uri("Resources/" + cardString + ".png", UriKind.Relative));
 
         }
-        private void UpdatePlayerCards()
+        private void UpdatePlayerCards(object? obj)
         {
             for (int j = 1; j < gameManager.Players.Length; j++)
             {
@@ -166,7 +161,7 @@ namespace WPFBlackjack
             gameManager.Stand(1);
             btnNewhand.IsEnabled = true;
             btnSurrender.IsEnabled = false;
-            updateLabelsAndImages(sender);
+            UpdateInfoLabels(sender);
         }
 
         private void btnSurrender_Click(object sender, RoutedEventArgs e)
@@ -190,7 +185,9 @@ namespace WPFBlackjack
                     gameManager.Shoe.Shuffle();
                 }
             }
-            updateLabelsAndImages(sender);
+            UpdateInfoLabels(null);
+            UpdatePlayerCards(null);
+            UpdateDealerCards(null);
         }
 
 
