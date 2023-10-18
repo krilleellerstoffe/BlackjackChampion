@@ -4,7 +4,6 @@ namespace CardGameLib
 {
     public class GameManager
     {
-        //mayber inherit a listmanger class that can be used for both game, shoe, hand and deck?
         private Deck[] _decks;
         private Player[] _players;
         private Shoe _shoe;

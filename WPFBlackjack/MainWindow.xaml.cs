@@ -40,10 +40,11 @@ namespace WPFBlackjack
             gameManager.Results += ShowHideAllDealerCards;
             gameManager.Results += UpdateInfoLabels;
             gameManager.Results += ShowWinners;
+            //now let user deal
             btnDeal.IsEnabled = true;
             UpdateInfoLabels(null);
         }
-
+        //winners popup and reset buttons
         private void ShowWinners(List<Player> winners)
         {
             string winnerString = "Winners:\n";
@@ -54,7 +55,7 @@ namespace WPFBlackjack
             MessageBox.Show(winnerString);
             btnHit.IsEnabled = false;
             btnStand.IsEnabled = false;
-            gameManager.Stand(1);
+            //gameManager.Stand(1);
             btnNewhand.IsEnabled = true;
             btnSurrender.IsEnabled = false;
             UpdateInfoLabels(null);

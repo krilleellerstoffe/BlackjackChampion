@@ -2,7 +2,7 @@
 
 namespace CardGameLib
 {
-    internal class FileLogger
+    public class FileLogger
     {
 
         private string _filePath;
