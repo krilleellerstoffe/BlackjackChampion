@@ -29,38 +29,44 @@
                         <Border.Background>
                             <ImageBrush ImageSource="Resources/back.jpg"/>
                         </Border.Background>
-                        <Image x:Name="imgDealerCardFront" Stretch="Fill" Visibility="Hidden"/>
+                        <Image x:Name="imgDealerCard1" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
-                    <ListBox x:Name="lstDealerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" VerticalAlignment="Top" Canvas.Left="372" Canvas.Top="136" HorizontalAlignment="Left" Visibility="Visible"/>
+                    <ListBox x:Name="lstDealerCards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" VerticalAlignment="Top" Canvas.Left="372" Canvas.Top="136" HorizontalAlignment="Left" Visibility="Hidden"/>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="330" Canvas.Top="31" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCard7" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="365" Canvas.Top="31" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCard6" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="400" Canvas.Top="31" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCard5" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="435" Canvas.Top="31" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCard4" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="470" Canvas.Top="31" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCard3" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="505" Canvas.Top="31" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="/Resources/back.jpg"/>
                         </Border.Background>
+                        <Image x:Name="imgDealerCard2" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Border BorderBrush="Black" BorderThickness="1" Height="100" Width="70" Canvas.Left="10" Canvas.Top="122" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible">
                         <Border.Background>
@@ -283,10 +289,10 @@
                     <Label x:Name="lblStatePlayer4" Content="Label" Canvas.Left="886" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblStatePlayer5" Content="Label" Canvas.Left="886" Canvas.Top="249" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <Label x:Name="lblStatePlayer0" Content="Label" Canvas.Left="572" Canvas.Top="5" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <ListBox x:Name="lstPlayer2Cards" Height="110" Width="96" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="102" Canvas.Top="291" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <ListBox x:Name="lstPlayer3Cards" Height="105" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="102" Canvas.Top="151" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <ListBox x:Name="lstPlayer4Cards" Height="104" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="734" Canvas.Top="144" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <ListBox x:Name="lstPlayer5Cards" Height="105" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="734" Canvas.Top="308" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ListBox x:Name="lstPlayer2Cards" Height="110" Width="96" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="102" Canvas.Top="291" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ListBox x:Name="lstPlayer3Cards" Height="105" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="102" Canvas.Top="151" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ListBox x:Name="lstPlayer4Cards" Height="104" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="734" Canvas.Top="144" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <ListBox x:Name="lstPlayer5Cards" Height="105" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="734" Canvas.Top="308" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblFundsPlayer2" Content="Funds" Canvas.Left="72" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblFundsPlayer1" Content="Funds" Canvas.Left="15" Canvas.Top="460" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <Label x:Name="lblFundsPlayer3" Content="Funds" Canvas.Left="73" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
