@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Numerics;
 
 namespace CardGameLib
 {
@@ -15,31 +14,48 @@ namespace CardGameLib
 
         public delegate void CardDrawnHandler(Player player, Card card);
         public event CardDrawnHandler CardDrawn;
-        public delegate void StandHandler (Player player);
+        public delegate void StandHandler(Player player);
         public event StandHandler Standing;
         public delegate void BustHandler(Player player);
         public event BustHandler Bust;
         public delegate void ResultsHandler(List<Player> winners);
         public event ResultsHandler Results;
 
-        private ConsoleLogger consoleLogger;
-        private FileLogger fileLogger;
-
         public GameManager(int deckCount, int playerCount)
         {
-            SetupLoggers();
             SetDecks(deckCount);
             SetPlayers(playerCount);
-
+            SetupLoggers();
             _shoe = new Shoe(this, _decks);
             _pot = 0;
             _betAmount = 10; //hardcoded for now, will add option to change
         }
-
+        private void SetDecks(int deckCount)
+        {
+            _decks = new Deck[deckCount];
+            for (int i = 0; i < deckCount; i++)
+            {
+                _decks[i] = new Deck();
+            }
+        }
+        private void SetPlayers(int playerCount)
+        {
+            //player[0] is always the dealer
+            _players = new Player[playerCount + 1];
+            for (int i = 0; i < _players.Length; i++)
+            {
+                _players[i] = new Player(this);
+                _players[i].PlayerNumber = i;
+                _players[i].PlayerName = "Player " + i;
+                if (i == 0) _players[i].PlayerName = "Dealer";
+            }
+        }
         private void SetupLoggers()
         {
-            consoleLogger = new ConsoleLogger();
-            fileLogger = new FileLogger("log.txt");
+            //first create loggers that subscribe to static Logger actions
+            ConsoleLogger consoleLogger = new ConsoleLogger();
+            FileLogger fileLogger = new FileLogger("log.txt");
+            //now subscribe trigger static Logger actions by subscribing to game events
             CardDrawn += (player, card) => Logger.LogMessage(player.PlayerName + " received a " + card.ToString());
             Standing += (player) => Logger.LogMessage(player.PlayerName + " is standing with " + player.Hand.HandValue());
             Bust += (player) => Logger.LogMessage(player.PlayerName + " went bust with " + player.Hand.HandValue());
@@ -55,55 +71,23 @@ namespace CardGameLib
             }
             Logger.LogMessage("Winners:\n" + winnerString);
         }
-
-        private void SetDecks(int deckCount)
-        {
-            _decks = new Deck[deckCount];
-            for (int i = 0; i < deckCount; i++)
-            {
-                _decks[i] = new Deck();
-            }
-        }
-
-        private void SetPlayers(int playerCount)
-        {
-            //player[0] is always the dealer
-            _players = new Player[playerCount + 1];
-            for (int i = 0; i < _players.Length; i++)
-            {
-                _players[i] = new Player(this);
-                _players[i].PlayerNumber = i;
-                _players[i].PlayerName = "Player " + i;
-                if (i == 0) _players[i].PlayerName = "Dealer";
-            }
-        }
-
+        //hit each player twice on dealing
         public void Deal()
         {
             NewHand();
             foreach (Player player in _players)
             {
-                if (player.PlayerState == Player.PlayerStates.InPlay)
-                {
-                    Hit(player);
-                }
-
+                if (player.PlayerState == Player.PlayerStates.InPlay) Hit(player);
             }
             foreach (Player player in _players)
             {
-                if (player.PlayerState == Player.PlayerStates.InPlay)
-                {
-                    Hit(player);
-                }
+                if (player.PlayerState == Player.PlayerStates.InPlay) Hit(player);
             }
         }
         public void Stand(int playerNumber)
         {
             //only change state to standing if not bust, declared winner, or surrendered
-            if (_players[playerNumber].PlayerState == Player.PlayerStates.InPlay)
-            {
-                _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
-            }
+            if (_players[playerNumber].PlayerState == Player.PlayerStates.InPlay) _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
             //if it's the dealer calling stand, set winners and exit loop
             if (playerNumber == 0)
             {
@@ -111,30 +95,31 @@ namespace CardGameLib
                 SetWinners();
                 return;
             }
-            //next player hit/stand (if exists)
-            if (_players.Length > playerNumber + 1)
-            {
-                AIHit(playerNumber + 1);
-            }
+            //next player's turn to hit (if they exist)
+            if (_players.Length > playerNumber + 1) AIHit(playerNumber + 1);
             //otherwise let the dealer finish
             AIHit(0);
         }
-
+        //sets winners based on hand value or blackjack found
         private void SetWinners()
         {
             int winningScore = 0;
             List<Player> winners = new List<Player>();
+            //first find the highest hand score
             for (int i = 0; i < _players.Length; i++)
             {
                 int handValue = _players[i].Hand.HandValue();
+                //check player is not bust or out of play
                 if ((handValue > winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust && _players[i].PlayerState != Player.PlayerStates.OutOfPlay)
                 {
                     winningScore = handValue;
                 }
             }
+            //now set all who have high score to winners
             for (int i = 0; i < _players.Length; i++)
             {
                 int handValue = _players[i].Hand.HandValue();
+                //check player is not bust or out of play
                 if ((handValue == winningScore) && _players[i].PlayerState != Player.PlayerStates.Bust && _players[i].PlayerState != Player.PlayerStates.OutOfPlay)
                 {
                     _players[i].PlayerState = Player.PlayerStates.Winner;
@@ -142,56 +127,36 @@ namespace CardGameLib
                 }
             }
             _winnersDeclared = true;
-            if (Results != null)
-            {
-                Results(winners);
-            }
-            Debug.WriteLine("Winning score: " + winningScore);
-            Debug.WriteLine("Winning players:");
-            foreach (Player player in winners)
-            {
-                Debug.WriteLine(player.PlayerName);
-            }
-
+            if (Results != null) Results(winners);
         }
-
+        //give player a new card from the shoe
         public void Hit(Player player)
         {
             Card newCard = _shoe.drawCard();
             player.Hand.AddToHand(newCard);
-            if (CardDrawn != null)
-            {
-                CardDrawn(player, newCard);
-            }
+            if (CardDrawn != null) CardDrawn(player, newCard);
             CheckIfBust(player);
         }
 
-        //hit if hand under 18, then stand/bust
+        //AI will hit if hand under 18, otherwise stand
         public void AIHit(int playerNumber)
         {
             Player AIPlayer = _players[playerNumber];
-            while (AIPlayer.Hand.HandValue() < 18)
-            {
-                Hit(AIPlayer);
-            }
+            while (AIPlayer.Hand.HandValue() < 18) Hit(AIPlayer);
             Stand(playerNumber);
-
         }
-
+        //set player as bust and then stand to allow next player to act
         private void CheckIfBust(Player player)
         {
             if (player.Hand.HandValue() > 21)
             {
                 player.PlayerState = Player.PlayerStates.Bust;
-                if (Bust != null)
-                {
-                    Bust(player);
-                }
+                if (Bust != null) Bust(player);
                 Stand(1);
             }
 
         }
-
+        //split winnings, clear hands and take new bets
         public void NewHand()
         {
             SplitPotToWinners();
@@ -210,35 +175,25 @@ namespace CardGameLib
                 {
                     player.PlayerState = Player.PlayerStates.OutOfPlay;
                 }
-
             }
         }
-
+        //pot gets split evenly between winners
         private void SplitPotToWinners()
         {
             int winners = 0;
+            //first count how many winners there are
             foreach (Player player in _players)
             {
-                if (player.PlayerState == Player.PlayerStates.Winner)
-                {
-                    winners++;
-                }
+                if (player.PlayerState == Player.PlayerStates.Winner) winners++;
             }
+            //now split pot
             foreach (Player player in _players)
             {
-                if (player.PlayerState == Player.PlayerStates.Winner)
-                {
-                    player.Funds += _pot / winners;
-                }
+                if (player.PlayerState == Player.PlayerStates.Winner) player.Funds += _pot / winners;
             }
             _pot = 0;
         }
-
-        public bool TimeToShuffle(int denominator)
-        {
-            return _shoe.TimeToShuffle(denominator);
-        }
-
+        //get half bet back if giving up straight after deal
         public void Surrender()
         {
             _players[1].PlayerState = Player.PlayerStates.OutOfPlay;
