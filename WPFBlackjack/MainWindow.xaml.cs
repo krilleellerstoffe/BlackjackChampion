@@ -37,6 +37,8 @@ namespace WPFBlackjack
             gameManager.CardDrawn += UpdatePlayerCards;
             gameManager.Bust += ShowBustMessage;
             gameManager.Bust += UpdateInfoLabels;
+            gameManager.Standing += ShowStandMessage;
+            gameManager.Standing += UpdateInfoLabels;
             gameManager.Results += ShowHideAllDealerCards;
             gameManager.Results += UpdateInfoLabels;
             gameManager.Results += ShowWinners;
@@ -61,7 +63,15 @@ namespace WPFBlackjack
             UpdateInfoLabels(null);
 
         }
-
+        public void ShowStandMessage(Player player)
+        {
+            //reveal cards if dealer
+            if(player.PlayerName.Equals("Dealer"))
+            {
+                ShowHideAllDealerCards(player);
+            }
+            MessageBox.Show(player.PlayerName + " stands with " + player.Hand.HandValue());
+        }
         public void ShowBustMessage(Player player)
         {
             //only show popup if user goes bust

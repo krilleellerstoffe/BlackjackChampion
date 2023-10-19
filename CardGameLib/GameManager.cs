@@ -86,7 +86,11 @@ namespace CardGameLib
         public void Stand(int playerNumber)
         {
             //only change state to standing if not bust, declared winner, or surrendered
-            if (_players[playerNumber].PlayerState == Player.PlayerStates.InPlay) _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
+            if (_players[playerNumber].PlayerState == Player.PlayerStates.InPlay)
+            {
+                _players[playerNumber].PlayerState = Player.PlayerStates.Standing;
+                Standing(_players[playerNumber]);
+            }
             //if it's the dealer calling stand, set winners and exit loop
             if (playerNumber == 0)
             {
