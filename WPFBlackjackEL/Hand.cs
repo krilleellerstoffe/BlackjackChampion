@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace WPFBlackjackEL
 {
@@ -8,9 +9,12 @@ namespace WPFBlackjackEL
         private int _handValue = 0;
         private bool _isSoft = false;   //soft if using an ace worth 1 point
         private bool _isBlackJack = false;
+        private int _handId;
 
         public List<Card> Cards { get => _cards; set => _cards = value; }
         public bool IsBlackJack { get => _isBlackJack; set => _isBlackJack = value; }
+        [Key]
+        public int HandId { get => _handId; set => _handId = value; }
 
         public void AddToHand(Card card)
         {

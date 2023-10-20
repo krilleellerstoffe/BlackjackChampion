@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,9 @@ namespace WPFBlackjackDAL
 
         public DbSet<Card> Cards { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            modelBuilder.Entity<Player>().ToTable("Players");
-            modelBuilder.Entity<Card>().ToTable("Cards");
-
-            modelBuilder.Entity<Player>()
-                .HasIndex(p => p.PlayerId)
-                .IsUnique();
+            optionsBuilder.UseSqlServer(@"Server=(LocalDB)\MSSQLLocalDB;Database=WPFBlackjack");
         }
     }
 }

@@ -7,6 +7,7 @@ namespace WPFBlackjackEL
         private Suits _suit;
         private Values _value;
         private string _imagePath;
+        private int _cardId;
 
         public Card(Suits suit, Values value)
         {
@@ -17,10 +18,10 @@ namespace WPFBlackjackEL
         }
 
         public string ImageFile { get => _imagePath; set => _imagePath = value; }
-        [Required]
-        internal Suits Suit { get => _suit; set => _suit = value; }
-        [Required]
-        internal Values Value { get => _value; set => this._value = value; }
+        public Suits Suit { get => _suit; set => _suit = value; }
+        public Values Value { get => _value; set => this._value = value; }
+        [Key]
+        public int CardId { get => _cardId; set => _cardId = value; }
 
         public int Score()
         {
