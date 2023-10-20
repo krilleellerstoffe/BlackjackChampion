@@ -7,11 +7,28 @@
         mc:Ignorable="d"
         Title="Setup" Height="331" Width="480" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Label Content="Select number of players" HorizontalAlignment="Left" Margin="36,42,0,0" VerticalAlignment="Top"/>
-        <Label Content="Select number of decks" HorizontalAlignment="Left" Margin="36,131,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cBoxPlayers" HorizontalAlignment="Left" Margin="249,44,0,0" VerticalAlignment="Top" Width="139" SelectedIndex="0"/>
-        <ComboBox x:Name="cBoxDecks" HorizontalAlignment="Left" Margin="249,135,0,0" VerticalAlignment="Top" Width="139" SelectedIndex="0"/>
-        <Button x:Name="btnStart" Click="btnStart_Click" Content="Start Game" HorizontalAlignment="Left" Margin="249,218,0,0" VerticalAlignment="Top" Height="44" Width="139"/>
+        <Grid Background="#FFE5E5E5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="Select number of players -&gt;" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="25,0,0,0"/>
+            <Label Content="Select number of decks -&gt;" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Margin="25,0,0,0"/>
+            <ComboBox x:Name="cBoxPlayers" HorizontalAlignment="Left" VerticalAlignment="Center" Width="44" SelectedIndex="0" Grid.Column="1"/>
+            <ComboBox x:Name="cBoxDecks" HorizontalAlignment="Left" VerticalAlignment="Center" Width="44" SelectedIndex="0" Grid.Column="1" Grid.Row="1"/>
+            <Button x:Name="btnStart" Click="btnStart_Click" Content="Start Game" HorizontalAlignment="Center" VerticalAlignment="Center" Height="44" Width="139" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+            <ListBox x:Name="lstSavedPlayers" Grid.ColumnSpan="3" Grid.RowSpan="3" Grid.Row="2" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,10,10,10" Grid.Column="1"/>
+            <Label Content="Saved Player Profiles -&gt;" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Height="26" Margin="25,0,0,0"/>
+        </Grid>
 
     </Grid>
 </Window>

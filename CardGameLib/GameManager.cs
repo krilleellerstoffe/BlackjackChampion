@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using WPFBlackjackDAL;
 using WPFBlackjackEL;
 
 namespace CardGameLib
@@ -29,6 +30,19 @@ namespace CardGameLib
             _shoe = new Shoe(this, _decks);
             _pot = 0;
             _betAmount = 10; //hardcoded for now, will add option to change
+        }
+
+        public void insertPlayer(int playerNumber, string playerName, int playerFunds)
+        {
+            try
+            {
+                _players[playerNumber].PlayerName = playerName;
+                _players[playerNumber].Funds = playerFunds;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+            }
         }
         private void SetDecks(int deckCount)
         {
@@ -68,6 +82,17 @@ namespace CardGameLib
             Standing += (player) => Logger.LogMessage(player.PlayerName + " is standing with " + player.Hand.HandValue());
             Bust += (player) => Logger.LogMessage(player.PlayerName + " went bust with " + player.Hand.HandValue());
             Results += LogWinners;
+        }
+        public void SavePlayerToDatabase()
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            context.Add(_players[1]);
+        }
+        public static List<Player> GetPlayersFromDatabase()
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            List<Player> players = (from player in context.Players select player).ToList();
+            return players;
         }
 
         private void LogWinners(List<Player> winners)

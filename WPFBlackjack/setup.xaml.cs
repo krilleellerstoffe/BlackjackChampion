@@ -1,4 +1,8 @@
-﻿using System.Windows;
+﻿using CardGameLib;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Documents;
+using WPFBlackjackEL;
 
 namespace WPFBlackjack
 {
@@ -19,6 +23,11 @@ namespace WPFBlackjack
             for (int i = 1; i <= 8; i++)
             {
                 cBoxDecks.Items.Add(i);
+            }
+            List<Player> savedPlayers = GameManager.GetPlayersFromDatabase();
+            foreach (Player player in savedPlayers)
+            {
+                lstSavedPlayers.Items.Add(player.PlayerName + ": " + player.Funds + " gold");
             }
         }
 
