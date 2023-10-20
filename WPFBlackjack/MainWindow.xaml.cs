@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using WPFBlackjackEL;
 
 namespace WPFBlackjack
 {
@@ -43,7 +44,7 @@ namespace WPFBlackjack
             gameManager.Results += UpdateInfoLabels;
             gameManager.Results += ShowWinners;
             //now let user deal
-            btnDeal.IsEnabled = true;
+            btnNewhand.IsEnabled = true;
             UpdateInfoLabels(null);
         }
         //winners popup and reset buttons
@@ -60,6 +61,7 @@ namespace WPFBlackjack
             //gameManager.Stand(1);
             btnNewhand.IsEnabled = true;
             btnSurrender.IsEnabled = false;
+            gameManager.SplitPotToWinners();
             UpdateInfoLabels(null);
 
         }

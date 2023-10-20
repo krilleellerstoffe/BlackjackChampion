@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using WPFBlackjackEL;
 
 namespace CardGameLib
 {

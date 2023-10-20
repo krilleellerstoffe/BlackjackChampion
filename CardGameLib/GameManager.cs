@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using WPFBlackjackEL;
 
 namespace CardGameLib
 {
@@ -39,14 +40,22 @@ namespace CardGameLib
         }
         private void SetPlayers(int playerCount)
         {
-            //player[0] is always the dealer
+
             _players = new Player[playerCount + 1];
             for (int i = 0; i < _players.Length; i++)
             {
-                _players[i] = new Player(this);
+                _players[i] = new Player();
                 _players[i].PlayerNumber = i;
-                _players[i].PlayerName = "Player " + i;
-                if (i == 0) _players[i].PlayerName = "Dealer";
+                //player[0] is always the dealer
+                if (i == 0)
+                {
+                    _players[i].PlayerName = "Dealer";
+                    _players[i].IsDealer = true;
+                    continue;
+                }
+                _players[i].PlayerName = "Player " + i; // get from database if exist
+                _players[i].Funds = 100; //get from database if exist
+                
             }
         }
         private void SetupLoggers()
@@ -73,7 +82,6 @@ namespace CardGameLib
         //hit each player twice on dealing
         public void Deal()
         {
-            NewHand();
             foreach (Player player in _players)
             {
                 if (player.PlayerState == Player.PlayerStates.InPlay) Hit(player);
@@ -162,13 +170,17 @@ namespace CardGameLib
         //split winnings, clear hands and take new bets
         public void NewHand()
         {
-            SplitPotToWinners();
             _winnersDeclared = false;
             foreach (Player player in _players)
             {
                 _shoe.ReturnToShoe(player.Hand.Cards.ToArray());
                 player.Hand.ClearHand();
-                if (player.Funds > _betAmount)
+                if (player.IsDealer)
+                {
+                    _pot += _betAmount;
+                    player.PlayerState = Player.PlayerStates.InPlay;
+                }
+                else if (player.Funds >= _betAmount)
                 {
                     player.Funds -= _betAmount;
                     _pot += _betAmount;
@@ -181,7 +193,7 @@ namespace CardGameLib
             }
         }
         //pot gets split evenly between winners
-        private void SplitPotToWinners()
+        public void SplitPotToWinners()
         {
             int winners = 0;
             //first count how many winners there are
@@ -192,6 +204,7 @@ namespace CardGameLib
             //now split pot
             foreach (Player player in _players)
             {
+                if (player.IsDealer) continue;
                 if (player.PlayerState == Player.PlayerStates.Winner) player.Funds += _pot / winners;
             }
             _pot = 0;

@@ -20,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\UtilitiesLib\UtilitiesLib.csproj" />
-    <ProjectReference Include="..\WPFBlackjackDAL\WPFBlackjackDAL.csproj" />
     <ProjectReference Include="..\WPFBlackjackEL\WPFBlackjackEL.csproj" />
   </ItemGroup>
 

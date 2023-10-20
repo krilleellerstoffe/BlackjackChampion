@@ -1,4 +1,4 @@
-﻿namespace CardGameLib
+﻿namespace WPFBlackjackEL
 {
     public enum Values
     {

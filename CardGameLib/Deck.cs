@@ -1,4 +1,6 @@
-﻿namespace CardGameLib
+﻿using WPFBlackjackEL;
+
+namespace CardGameLib
 {
     public class Deck
     {

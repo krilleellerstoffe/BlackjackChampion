@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CardGameLib
+namespace WPFBlackjackEL
 {
     public class Hand
     {

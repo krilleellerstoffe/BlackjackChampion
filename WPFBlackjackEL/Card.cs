@@ -1,4 +1,6 @@
-﻿namespace CardGameLib
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WPFBlackjackEL
 {
     public class Card
     {
@@ -15,7 +17,9 @@
         }
 
         public string ImageFile { get => _imagePath; set => _imagePath = value; }
+        [Required]
         internal Suits Suit { get => _suit; set => _suit = value; }
+        [Required]
         internal Values Value { get => _value; set => this._value = value; }
 
         public int Score()
