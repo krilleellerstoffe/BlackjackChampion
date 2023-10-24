@@ -43,6 +43,7 @@
     <None Remove="Resources\queen_of_diamonds.png" />
     <None Remove="Resources\queen_of_hearts.png" />
     <None Remove="Resources\queen_of_spades.png" />
+    <None Remove="Resources\RandomNames.txt" />
     <None Remove="Resources\red_joker.png" />
     <None Remove="Resources\seven_of_clubs.png" />
     <None Remove="Resources\seven_of_diamonds.png" />
@@ -87,6 +88,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\nine_of_clubs.png" />
+    <Resource Include="Resources\RandomNames.txt" />
     <Resource Include="Resources\ten_of_clubs.png" />
     <Resource Include="Resources\ten_of_diamonds.png" />
     <Resource Include="Resources\ten_of_hearts.png" />

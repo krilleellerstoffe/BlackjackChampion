@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFBlackjack"
         mc:Ignorable="d"
-        Title="Create New Player" Height="200" Width="400">
+        Title="Create New Player" Height="200" Width="400" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Grid>
+        <Grid Background="#FFE5E5E5">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -17,8 +17,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="txtName" Grid.ColumnSpan="3" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Center" Margin="20,0,20,0" HorizontalAlignment="Center" Width="280" Height="25"/>
-            <Button x:Name="btnRandom" Content="Random Name" Grid.Row="1" Margin="20,20,20,20"/>
+            <TextBox x:Name="txtName" Grid.ColumnSpan="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="20,20,20,0" HorizontalAlignment="Center" Width="280" Height="25"/>
+            <Button x:Name="btnRandom" Content="Random Name" Grid.Row="1" Margin="20,20,20,20" Click="btnRandom_Click"/>
             <Button x:Name="btnNewPlayer" Grid.Column="1" Content="Create New Player" Grid.Row="1" Grid.ColumnSpan="2" Margin="20,20,20,20"/>
         </Grid>
 
