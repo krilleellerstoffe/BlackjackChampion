@@ -69,7 +69,7 @@ namespace WPFBlackjack
                     if (result == MessageBoxResult.No) return;
                 try
                 {
-                    GameManager.RemoveFromDatabase((Player)lstSavedPlayers.SelectedItem);
+                    GameManager.RemovePlayerFromDatabase((Player)lstSavedPlayers.SelectedItem);
                     ShowSavedPlayers();
                 }
                 catch (Exception ex)

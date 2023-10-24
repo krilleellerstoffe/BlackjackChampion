@@ -9,6 +9,10 @@ namespace WPFBlackjackDAL
 
         public DbSet<Card> Cards { get; set; }
 
+        public DbSet<GameState> GameStates { get; set; }
+
+        public DbSet<Shoe> shoes { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(LocalDB)\MSSQLLocalDB;Database=WPFBlackjack");

@@ -247,5 +247,16 @@ namespace WPFBlackjack
             UpdateInfoLabels(null);
         }
 
+        private void btnResume_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSaveGame loadWindow = new LoadSaveGame();
+            loadWindow.Show();
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (gameManager == null) return;
+            gameManager.SaveGame();
+        }
     }
 }

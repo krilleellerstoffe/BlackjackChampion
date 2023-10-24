@@ -1,6 +1,6 @@
-﻿using WPFBlackjackEL;
+﻿
 
-namespace CardGameLib
+namespace WPFBlackjackEL
 {
     public class Deck
     {

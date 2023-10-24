@@ -1,21 +1,25 @@
-﻿using System.Diagnostics;
-using WPFBlackjackEL;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
-namespace CardGameLib
+namespace WPFBlackjackEL
 {
     public class Shoe
     {
         private List<Card> _cards = new List<Card>();
         private int _totalCards = 0;
         private int _cardsSinceLastShuffle = 0;
-        private GameManager gameManager;
+        private int _shoeID;
 
         public List<Card> Cards { get => _cards; set => _cards = value; }
         public int CardsSinceLastShuffle { get => _cardsSinceLastShuffle; set => _cardsSinceLastShuffle = value; }
+        public int TotalCards { get => _totalCards; set => _totalCards = value; }
+        [Key]
+        public int ShoeID { get => _shoeID; set => _shoeID = value; }
 
-        public Shoe(GameManager gameManager, Deck[] decks)
+        public Shoe() { }
+        public Shoe(Deck[] decks)
         {
-            this.gameManager = gameManager;
             AddDecksToShoe(decks);
             Shuffle();
         }
@@ -29,13 +33,13 @@ namespace CardGameLib
                     Cards.Add(card);
                 }
             }
-            _totalCards = Cards.Count;
+            TotalCards = Cards.Count;
 
         }
         //checks if it's time to shuffle based on proportion of non-shuffled cards(4 = 1/4 = 25%; 10 = 1/10 = 10%...)
         public bool TimeToShuffle(int denominator)
         {
-            return CardsSinceLastShuffle > _totalCards - _totalCards / denominator;
+            return CardsSinceLastShuffle > TotalCards - TotalCards / denominator;
         }
         //only call this method when all cards returned to deck, resets used-card-counter
         public bool Shuffle()

@@ -337,8 +337,8 @@
                 <Label x:Name="lblCardsSinceShuffle" Content="Label" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Margin="180,0,0,0"/>
                 <Button x:Name="btnNewhand" Click="btnNewhand_Click" Content="New Hand" Grid.Row="7" Margin="10,10,10,10" IsEnabled="False"/>
                 <Button x:Name="btnNewgame" Content="Start new game" Click="btnNewgame_Click" Margin="10,10,10,10"/>
-                <Button Content="Resume Saved Game" Margin="10,10,10,10" Grid.Row="1"/>
-                <Button Content="Save Game" Margin="10,10,10,10" Grid.Row="2" IsEnabled="False"/>
+                <Button x:Name="btnResume" Content="Resume Saved Game" Margin="10,10,10,10" Grid.Row="1" Click="btnResume_Click"/>
+                <Button x:Name="btnSave" Content="Save Game" Margin="10,10,10,10" Grid.Row="2" IsEnabled="False" Click="btnSave_Click"/>
             </Grid>
         </Grid>
         

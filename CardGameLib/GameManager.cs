@@ -27,7 +27,7 @@ namespace CardGameLib
             SetDecks(deckCount);
             SetPlayers(playerCount);
             SetupLoggers();
-            _shoe = new Shoe(this, _decks);
+            _shoe = new Shoe(_decks);
             _pot = 0;
             _betAmount = 10; //hardcoded for now, will add option to change
         }
@@ -82,30 +82,7 @@ namespace CardGameLib
             Bust += (player) => Logger.LogMessage(player.PlayerName + " went bust with " + player.Hand.HandValue());
             Results += LogWinners;
         }
-        public void SavePlayerToDatabase()
-        {
-            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();            
-            try
-            {
-                // Retrieve the player you want to update
-                Player playerToUpdate = context.Players.FirstOrDefault(p => p.PlayerName == _players[1].PlayerName);
-
-                if (playerToUpdate != null)
-                {
-                    // Modify the player's funds
-                    playerToUpdate.Funds = _players[1].Funds;
-                }
-                else
-                {
-                    context.Add(_players[1]);
-                }
-                context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-        }
+ 
 
 
         private void LogWinners(List<Player> winners)
@@ -256,17 +233,67 @@ namespace CardGameLib
             Stand(1);
         }
 
-        public static void RemoveFromDatabase(Player selectedPlayer)
+
+        public void SavePlayerToDatabase()
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            try
+            {
+                // Retrieve the player you want to update
+                Player playerToUpdate = context.Players.FirstOrDefault(p => p.PlayerName == _players[1].PlayerName);
+
+                if (playerToUpdate != null)
+                {
+                    // Modify the player's funds
+                    playerToUpdate.Funds = _players[1].Funds;
+                }
+                else
+                {
+                    context.Add(_players[1]);
+                }
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+        public static List<Player> GetPlayersFromDatabase()
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            List<Player> players = (from player in context.Players 
+                                    select player).ToList();
+            return players;
+        }
+        public static void RemovePlayerFromDatabase(Player selectedPlayer)
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
             context.Remove(selectedPlayer);
             context.SaveChanges();
         }
-        public static List<Player> GetPlayersFromDatabase()
+
+        public void SaveGame()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            List<Player> players = (from player in context.Players select player).ToList();
-            return players;
+            GameState gameState = new GameState(_shoe, _players, _pot);
+            context.Add(gameState);
+            context.SaveChanges();
+            
+        }
+
+        public static List<GameState> GetSaveGamesFromDatabase()
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            List<GameState> saveGames = (from gameState in context.GameStates 
+                                         select gameState).ToList();
+            return saveGames;
+        }
+
+        public static void RemoveSaveFromDatabase(GameState saveGame)
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            context.Remove(saveGame);
+            context.SaveChanges();
         }
 
         public Deck[] Decks { get => _decks; set => _decks = value; }
