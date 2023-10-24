@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using WPFBlackjackEL;
 
 namespace WPFBlackjack
 {
@@ -20,8 +10,10 @@ namespace WPFBlackjack
     /// </summary>
     public partial class InsertName : Window
     {
-        public InsertName()
+        private setup _parent;
+        public InsertName(setup parent)
         {
+            _parent = parent;
             InitializeComponent();
         }
 
@@ -42,7 +34,19 @@ namespace WPFBlackjack
                     txtName.Text = newRandomName.Trim(); ;
                 }
             }
-            
+
+        }
+
+        private void btnNewPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtName.Text.Length > 0)
+            {
+                Player newPlayer = new Player();
+                newPlayer.PlayerName = txtName.Text;
+                newPlayer.Funds = 100;
+                _parent.ParentWindow.LoadPlayer1(newPlayer);
+                this.Close();
+            }
         }
     }
 }

@@ -32,12 +32,11 @@ namespace CardGameLib
             _betAmount = 10; //hardcoded for now, will add option to change
         }
 
-        public void insertPlayer(int playerNumber, string playerName, int playerFunds)
+        public void insertPlayer(int playerNumber, Player player)
         {
             try
             {
-                _players[playerNumber].PlayerName = playerName;
-                _players[playerNumber].Funds = playerFunds; 
+                _players[playerNumber] = player;
             }
             catch (Exception e)
             {
@@ -69,7 +68,7 @@ namespace CardGameLib
                 }
                 _players[i].PlayerName = "Player " + i; // get from database if exist
                 _players[i].Funds = 100; //get from database if exist
-                
+
             }
         }
         private void SetupLoggers()
@@ -85,15 +84,29 @@ namespace CardGameLib
         }
         public void SavePlayerToDatabase()
         {
-            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            context.Add(_players[1]);
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();            
+            try
+            {
+                // Retrieve the player you want to update
+                Player playerToUpdate = context.Players.FirstOrDefault(p => p.PlayerName == _players[1].PlayerName);
+
+                if (playerToUpdate != null)
+                {
+                    // Modify the player's funds
+                    playerToUpdate.Funds = _players[1].Funds;
+                }
+                else
+                {
+                    context.Add(_players[1]);
+                }
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
-        public static List<Player> GetPlayersFromDatabase()
-        {
-            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            List<Player> players = (from player in context.Players select player).ToList();
-            return players;
-        }
+
 
         private void LogWinners(List<Player> winners)
         {
@@ -241,6 +254,19 @@ namespace CardGameLib
             _pot -= _betAmount / 2;
             _players[1].Funds += _betAmount / 2;
             Stand(1);
+        }
+
+        public static void RemoveFromDatabase(Player selectedPlayer)
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            context.Remove(selectedPlayer);
+            context.SaveChanges();
+        }
+        public static List<Player> GetPlayersFromDatabase()
+        {
+            using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            List<Player> players = (from player in context.Players select player).ToList();
+            return players;
         }
 
         public Deck[] Decks { get => _decks; set => _decks = value; }

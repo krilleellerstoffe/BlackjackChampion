@@ -11,7 +11,6 @@ namespace WPFBlackjackEL
         private int _playerNumber;
         private string _playerName;
         private bool _isDealer = false;
-        private int _playerId;
 
         public Player()
         {
@@ -23,30 +22,16 @@ namespace WPFBlackjackEL
         [Required]
         public int Funds { get => _funds; set => _funds = value; }
         public PlayerStates PlayerState { get => _playerState; set => _playerState = value; }
-        [Required]
+        [Key]
         public string PlayerName { get => _playerName; set => _playerName = value; }
         public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
         public bool IsDealer { get => _isDealer; set => _isDealer = value; }
-        [Key]
-        public int PlayerId { get => _playerId; set => _playerId = value; }
 
-        public void Stand()
+        public override string ToString()
         {
-
+            return PlayerName + " (" + Funds + " gold)";
         }
 
-        public void Double()
-        {
-
-        }
-        public void Hit()
-        {
-
-        }
-        public void Surrender()
-        {
-
-        }
 
         public enum PlayerStates
         {

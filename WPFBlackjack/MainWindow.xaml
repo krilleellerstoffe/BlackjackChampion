@@ -279,10 +279,10 @@
                         <Image x:Name="imgPlayer1Card2" Stretch="Fill" Visibility="Hidden"/>
                     </Border>
                     <Label Content="Dealer" Canvas.Left="330" Canvas.Top="5"/>
-                    <Label Content="Player 2" Canvas.Left="10" HorizontalAlignment="Center" Canvas.Top="249" VerticalAlignment="Top"/>
-                    <Label Content="Player 3" Canvas.Left="10" Canvas.Top="96" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <Label Content="Player 4" Canvas.Left="640" HorizontalAlignment="Center" Canvas.Top="96" VerticalAlignment="Top"/>
-                    <Label Content="Player 5" Canvas.Left="640" HorizontalAlignment="Center" Canvas.Top="249" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPlayer2" Content="Player 2" Canvas.Left="10" HorizontalAlignment="Center" Canvas.Top="249" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPlayer3" Content="Player 3" Canvas.Left="10" Canvas.Top="96" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPlayer4" Content="Player 4" Canvas.Left="640" HorizontalAlignment="Center" Canvas.Top="96" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPlayer5" Content="Player 5" Canvas.Left="640" HorizontalAlignment="Center" Canvas.Top="249" VerticalAlignment="Top"/>
                     <Label x:Name="lblStatePlayer1" Content="State" Canvas.Left="314" Canvas.Top="405"/>
                     <Label x:Name="lblStatePlayer2" Content="Label" Canvas.Left="252" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblStatePlayer3" Content="Label" Canvas.Left="252" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -307,7 +307,7 @@
                     <Button x:Name="btnSurrender" Content="Surrender" Click="btnSurrender_Click" Canvas.Left="812" Canvas.Top="71" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
                     <ListBox x:Name="lstPlayer1Cards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="458" Canvas.Top="11" Visibility="Hidden"/>
                     <Label x:Name="lblHandValue" Content="HandValue" Canvas.Left="396" Canvas.Top="12" FontSize="72"/>
-                    <Label Content="Player 1" Canvas.Left="10"/>
+                    <Label x:Name="lblPlayer1" Content="Player 1" Canvas.Left="10"/>
                 </Canvas>
             </Grid>
             <Grid x:Name="infoGrid" Grid.Column="2" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
@@ -322,14 +322,14 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Label Content="Number of Decks" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Row="2"/>
+                <Label Content="Number of Decks" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Row="2" Visibility="Hidden"/>
                 <Label Content="Cards in Shoe" HorizontalAlignment="Left" Margin="10,0,0,0" Grid.Row="3" VerticalAlignment="Center"/>
-                <Label Content="Number of Players" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Row="1"/>
+                <Label Content="Number of Players" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Grid.Row="1" Visibility="Hidden"/>
                 <Label Content="Time to shuffle" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="5" VerticalAlignment="Center"/>
                 <TextBlock x:Name="txtNumberDecks" HorizontalAlignment="Right" Margin="0,0,10,0" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                <Label x:Name="lblDecks" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center" Grid.Row="2"/>
+                <Label x:Name="lblDecks" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center" Grid.Row="2" Visibility="Hidden"/>
                 <Label x:Name="lblCardsInShoe" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="3" VerticalAlignment="Center"/>
-                <Label x:Name="lblPlayerCount" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center" Grid.Row="1"/>
+                <Label x:Name="lblPlayerCount" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center" Grid.Row="1" Visibility="Hidden"/>
                 <Label x:Name="lblShuffle" Content="Label" HorizontalAlignment="Left" Margin="180,0,0,0" Grid.Row="5" VerticalAlignment="Center"/>
                 <Button Grid.Row="6" x:Name="btnShuffle" Content="Shuffle" Click="btnShuffle_Click" Margin="20,10,20,10" IsEnabled="False"/>
                 <Button x:Name="btnDeal" Click="btnDeal_Click" Content="Deal" Grid.Row="8" Margin="5,5,5,5" IsEnabled="False"/>
@@ -337,6 +337,8 @@
                 <Label x:Name="lblCardsSinceShuffle" Content="Label" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Margin="180,0,0,0"/>
                 <Button x:Name="btnNewhand" Click="btnNewhand_Click" Content="New Hand" Grid.Row="7" Margin="10,10,10,10" IsEnabled="False"/>
                 <Button x:Name="btnNewgame" Content="Start new game" Click="btnNewgame_Click" Margin="10,10,10,10"/>
+                <Button Content="Resume Saved Game" Margin="10,10,10,10" Grid.Row="1"/>
+                <Button Content="Save Game" Margin="10,10,10,10" Grid.Row="2" IsEnabled="False"/>
             </Grid>
         </Grid>
         

@@ -21,11 +21,28 @@ namespace WPFBlackjack
 
         public int Decks { get => _decks; set => _decks = value; }
         public int Players { get => _players; set => _players = value; }
+        protected override void OnClosed(EventArgs e)
+        {
+            if (gameManager != null)
+            {
+                MessageBoxResult result = MessageBox.Show("Save '" + gameManager.Players[1].PlayerName + "' to database?", "Exit game", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        gameManager.SavePlayerToDatabase();
+                        break;
+                    default:
+                        break;
+                }
+            }
 
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
+        }
         public MainWindow()
         {
             InitializeComponent();
-            setupWindow = new setup(this);
         }
 
         public void StartGame()
@@ -68,7 +85,7 @@ namespace WPFBlackjack
         public void ShowStandMessage(Player player)
         {
             //reveal cards if dealer
-            if(player.PlayerName.Equals("Dealer"))
+            if (player.PlayerName.Equals("Dealer"))
             {
                 ShowHideAllDealerCards(player);
             }
@@ -216,11 +233,19 @@ namespace WPFBlackjack
 
         }
 
-        private void btnNewgame_Click(object sender, RoutedEventArgs e) => setupWindow.Show();
+        private void btnNewgame_Click(object sender, RoutedEventArgs e)
+        {
+
+            setupWindow = new setup(this);
+            setupWindow.Show();
+        }
 
         internal void LoadPlayer1(Player player)
         {
-            gameManager.insertPlayer(1, player.PlayerName, player.PlayerId);
+            gameManager.insertPlayer(1, player);
+            lblPlayer1.Content = player.PlayerName;
+            UpdateInfoLabels(null);
         }
+
     }
 }
