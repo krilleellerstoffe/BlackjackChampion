@@ -218,5 +218,9 @@ namespace WPFBlackjack
 
         private void btnNewgame_Click(object sender, RoutedEventArgs e) => setupWindow.Show();
 
+        internal void LoadPlayer1(Player player)
+        {
+            gameManager.insertPlayer(1, player.PlayerName, player.PlayerId);
+        }
     }
 }

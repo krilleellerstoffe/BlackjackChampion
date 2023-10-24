@@ -37,7 +37,7 @@ namespace CardGameLib
             try
             {
                 _players[playerNumber].PlayerName = playerName;
-                _players[playerNumber].Funds = playerFunds;
+                _players[playerNumber].Funds = playerFunds; 
             }
             catch (Exception e)
             {

@@ -36,6 +36,15 @@ namespace WPFBlackjack
             parentWindow.Decks = (int)cBoxDecks.SelectedItem;
             parentWindow.Players = (int)cBoxPlayers.SelectedItem;
             parentWindow.StartGame();
+            if (lstSavedPlayers.SelectedItems.Count > 0)
+            {
+                parentWindow.LoadPlayer1((Player)lstSavedPlayers.SelectedItem);
+            }
+            else
+            {
+                InsertName insert = new InsertName();
+                insert.Show();
+            }
             this.Hide();
         }
     }
