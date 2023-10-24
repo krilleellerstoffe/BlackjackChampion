@@ -10,7 +10,7 @@ namespace CardGameLib
         private Player[] _players;
         private Shoe _shoe;
         private int _pot;
-        private int _betAmount;
+        private int _betAmount = 10; //hardcoded for now, will add option to change;
         private bool _winnersDeclared = false;
 
         public delegate void CardDrawnHandler(Player player, Card card);
@@ -29,7 +29,14 @@ namespace CardGameLib
             SetupLoggers();
             _shoe = new Shoe(_decks);
             _pot = 0;
-            _betAmount = 10; //hardcoded for now, will add option to change
+        }
+
+        public GameManager(GameState gameState)
+        {
+            _players = gameState.Players.ToArray();
+            _pot = gameState.Pot;
+            _shoe = gameState.Shoe;
+            SetupLoggers();
         }
 
         public void insertPlayer(int playerNumber, Player player)
@@ -82,7 +89,7 @@ namespace CardGameLib
             Bust += (player) => Logger.LogMessage(player.PlayerName + " went bust with " + player.Hand.HandValue());
             Results += LogWinners;
         }
- 
+
 
 
         private void LogWinners(List<Player> winners)
@@ -261,7 +268,7 @@ namespace CardGameLib
         public static List<Player> GetPlayersFromDatabase()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            List<Player> players = (from player in context.Players 
+            List<Player> players = (from player in context.Players
                                     select player).ToList();
             return players;
         }
@@ -276,15 +283,25 @@ namespace CardGameLib
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
             GameState gameState = new GameState(_shoe, _players, _pot);
+            //if item originally from database, update instead of writing new object
+            context.Attach(_shoe);
+            foreach (Player player in _players)
+            {
+                context.Attach(player);
+            }
             context.Add(gameState);
             context.SaveChanges();
-            
         }
 
+        public static GameManager LoadGame(GameState savedGame)
+        {
+            return new GameManager(savedGame);
+        }
         public static List<GameState> GetSaveGamesFromDatabase()
         {
+            //TODO work out why these are empty!!
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            List<GameState> saveGames = (from gameState in context.GameStates 
+            List<GameState> saveGames = (from gameState in context.GameStates
                                          select gameState).ToList();
             return saveGames;
         }

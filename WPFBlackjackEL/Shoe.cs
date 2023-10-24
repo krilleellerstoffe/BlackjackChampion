@@ -15,6 +15,7 @@ namespace WPFBlackjackEL
         public int CardsSinceLastShuffle { get => _cardsSinceLastShuffle; set => _cardsSinceLastShuffle = value; }
         public int TotalCards { get => _totalCards; set => _totalCards = value; }
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ShoeID { get => _shoeID; set => _shoeID = value; }
 
         public Shoe() { }

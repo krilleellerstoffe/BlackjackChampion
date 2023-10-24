@@ -24,11 +24,11 @@ namespace WPFBlackjackDAL.Migrations
 
             modelBuilder.Entity("WPFBlackjackEL.Card", b =>
                 {
-                    b.Property<int>("CardId")
+                    b.Property<int>("CardID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardID"));
 
                     b.Property<int?>("HandId")
                         .HasColumnType("int");
@@ -37,17 +37,43 @@ namespace WPFBlackjackDAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ShoeID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Suit")
                         .HasColumnType("int");
 
                     b.Property<int>("Value")
                         .HasColumnType("int");
 
-                    b.HasKey("CardId");
+                    b.HasKey("CardID");
 
                     b.HasIndex("HandId");
 
-                    b.ToTable("Cards");
+                    b.HasIndex("ShoeID");
+
+                    b.ToTable("Card");
+                });
+
+            modelBuilder.Entity("WPFBlackjackEL.GameState", b =>
+                {
+                    b.Property<int>("GameId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
+
+                    b.Property<int>("Pot")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShoeID")
+                        .HasColumnType("int");
+
+                    b.HasKey("GameId");
+
+                    b.HasIndex("ShoeID");
+
+                    b.ToTable("GameStates");
                 });
 
             modelBuilder.Entity("WPFBlackjackEL.Hand", b =>
@@ -77,6 +103,9 @@ namespace WPFBlackjackDAL.Migrations
                     b.Property<int>("Funds")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GameStateGameId")
+                        .HasColumnType("int");
+
                     b.Property<int>("HandId")
                         .HasColumnType("int");
 
@@ -98,9 +127,30 @@ namespace WPFBlackjackDAL.Migrations
 
                     b.HasKey("PlayerId");
 
+                    b.HasIndex("GameStateGameId");
+
                     b.HasIndex("HandId");
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("WPFBlackjackEL.Shoe", b =>
+                {
+                    b.Property<int>("ShoeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShoeID"));
+
+                    b.Property<int>("CardsSinceLastShuffle")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalCards")
+                        .HasColumnType("int");
+
+                    b.HasKey("ShoeID");
+
+                    b.ToTable("Shoe");
                 });
 
             modelBuilder.Entity("WPFBlackjackEL.Card", b =>
@@ -108,10 +158,29 @@ namespace WPFBlackjackDAL.Migrations
                     b.HasOne("WPFBlackjackEL.Hand", null)
                         .WithMany("Cards")
                         .HasForeignKey("HandId");
+
+                    b.HasOne("WPFBlackjackEL.Shoe", null)
+                        .WithMany("Cards")
+                        .HasForeignKey("ShoeID");
+                });
+
+            modelBuilder.Entity("WPFBlackjackEL.GameState", b =>
+                {
+                    b.HasOne("WPFBlackjackEL.Shoe", "Shoe")
+                        .WithMany()
+                        .HasForeignKey("ShoeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Shoe");
                 });
 
             modelBuilder.Entity("WPFBlackjackEL.Player", b =>
                 {
+                    b.HasOne("WPFBlackjackEL.GameState", null)
+                        .WithMany("Players")
+                        .HasForeignKey("GameStateGameId");
+
                     b.HasOne("WPFBlackjackEL.Hand", "Hand")
                         .WithMany()
                         .HasForeignKey("HandId")
@@ -121,7 +190,17 @@ namespace WPFBlackjackDAL.Migrations
                     b.Navigation("Hand");
                 });
 
+            modelBuilder.Entity("WPFBlackjackEL.GameState", b =>
+                {
+                    b.Navigation("Players");
+                });
+
             modelBuilder.Entity("WPFBlackjackEL.Hand", b =>
+                {
+                    b.Navigation("Cards");
+                });
+
+            modelBuilder.Entity("WPFBlackjackEL.Shoe", b =>
                 {
                     b.Navigation("Cards");
                 });

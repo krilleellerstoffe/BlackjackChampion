@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WPFBlackjackEL
 {
@@ -28,6 +29,7 @@ namespace WPFBlackjackEL
         public int PlayerNumber { get => _playerNumber; set => _playerNumber = value; }
         public bool IsDealer { get => _isDealer; set => _isDealer = value; }
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PlayerId { get => _playerId; set => _playerId = value; }
 
         public override string ToString()

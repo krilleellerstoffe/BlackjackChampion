@@ -1,7 +1,6 @@
 ﻿using CardGameLib;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using WPFBlackjackEL;
@@ -64,19 +63,19 @@ namespace WPFBlackjack
             {
                 Logger.LogMessage("delete key");
                 if (lstSavedPlayers.SelectedItems.Count > 0)
-            {
+                {
                     MessageBoxResult result = MessageBox.Show("Delete '" + ((Player)lstSavedPlayers.SelectedItem).PlayerName + "' from database?", "Delete player", MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.No) return;
-                try
-                {
-                    GameManager.RemovePlayerFromDatabase((Player)lstSavedPlayers.SelectedItem);
-                    ShowSavedPlayers();
+                    try
+                    {
+                        GameManager.RemovePlayerFromDatabase((Player)lstSavedPlayers.SelectedItem);
+                        ShowSavedPlayers();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogError(ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex.Message);
-                }
-            }
             }
         }
     }

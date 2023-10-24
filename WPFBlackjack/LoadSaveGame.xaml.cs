@@ -1,17 +1,7 @@
 ﻿using CardGameLib;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using WPFBlackjackEL;
 
 namespace WPFBlackjack
@@ -21,10 +11,12 @@ namespace WPFBlackjack
     /// </summary>
     public partial class LoadSaveGame : Window
     {
-        public LoadSaveGame()
+        private MainWindow MainWindow;
+        public LoadSaveGame(MainWindow mainWindow)
         {
             InitializeComponent();
             UpdateSaveGameList();
+            MainWindow = mainWindow;
         }
 
         private void UpdateSaveGameList()
@@ -34,6 +26,39 @@ namespace WPFBlackjack
             foreach (GameState saveGame in saveGames)
             {
                 lstSaveGames.Items.Add(saveGame);
+            }
+        }
+
+        private void lstSaveGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstSaveGames.SelectedItems.Count > 0)
+            {
+                btnDeleteGame.IsEnabled = true;
+                btnLoadGame.IsEnabled = true;
+            }
+            else
+            {
+                btnDeleteGame.IsEnabled = false;
+                btnLoadGame.IsEnabled = false;
+            }
+        }
+
+        private void btnDeleteGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSaveGames.SelectedItem != null)
+            {
+                GameManager.RemoveSaveFromDatabase((GameState)lstSaveGames.SelectedItem);
+            }
+        }
+
+        private void btnLoadGame_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSaveGames.SelectedItem != null)
+            {
+                GameManager loadedManager = GameManager.LoadGame((GameState)lstSaveGames.SelectedItem);
+
+                MainWindow.StartGame(loadedManager);
+
             }
         }
     }

@@ -49,6 +49,11 @@ namespace WPFBlackjack
         {
             //create new game based on setup
             gameManager = new GameManager(_decks, _players);
+            StartGame(gameManager);
+        }
+
+        public void StartGame(GameManager gameManager)
+        {
             //subscribe to events in gamemanager
             gameManager.CardDrawn += UpdateInfoLabels;
             gameManager.CardDrawn += ShowHideSingleDealerCard;
@@ -62,6 +67,7 @@ namespace WPFBlackjack
             gameManager.Results += ShowWinners;
             //now let user deal
             btnNewhand.IsEnabled = true;
+            btnSave.IsEnabled = true;
             UpdateInfoLabels(null);
         }
         //winners popup and reset buttons
@@ -249,7 +255,7 @@ namespace WPFBlackjack
 
         private void btnResume_Click(object sender, RoutedEventArgs e)
         {
-            LoadSaveGame loadWindow = new LoadSaveGame();
+            LoadSaveGame loadWindow = new LoadSaveGame(this);
             loadWindow.Show();
         }
 

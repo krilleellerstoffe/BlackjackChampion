@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace WPFBlackjackEL
@@ -14,6 +15,7 @@ namespace WPFBlackjackEL
         public List<Card> Cards { get => _cards; set => _cards = value; }
         public bool IsBlackJack { get => _isBlackJack; set => _isBlackJack = value; }
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HandId { get => _handId; set => _handId = value; }
 
         public void AddToHand(Card card)
