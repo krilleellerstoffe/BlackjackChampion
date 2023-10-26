@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Xml.Linq;
+using System;
+using System.IO;
+using System.Windows;
 using WPFBlackjackDAL;
 using WPFBlackjackEL;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CardGameLib
 {
@@ -24,10 +29,10 @@ namespace CardGameLib
         public delegate void ResultsHandler(List<Player> winners);
         public event ResultsHandler Results;
 
-        public GameManager(int deckCount, int playerCount)
+        public GameManager(int deckCount, int playerCount, string[] names)
         {
             SetDecks(deckCount);
-            SetPlayers(playerCount);
+            SetPlayers(playerCount, names);
             SetupLoggers();
             _shoe = new Shoe(_decks);
             _pot = 0;
@@ -61,9 +66,8 @@ namespace CardGameLib
                 _decks[i] = new Deck();
             }
         }
-        private void SetPlayers(int playerCount)
+        private void SetPlayers(int playerCount, string[] aiNames)
         {
-
             _players = new Player[playerCount + 1];
             for (int i = 0; i < _players.Length; i++)
             {
@@ -76,8 +80,8 @@ namespace CardGameLib
                     _players[i].IsDealer = true;
                     continue;
                 }
-                _players[i].PlayerName = "Player " + i; // get from database if exist
-                _players[i].Funds = 100; //get from database if exist
+                _players[i].PlayerName = "AI-" + aiNames[i];
+                _players[i].Funds = 100;
 
             }
         }

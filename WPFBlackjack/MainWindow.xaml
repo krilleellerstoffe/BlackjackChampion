@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFBlackjack"
         mc:Ignorable="d"
-        Title="Blackjack by Christopher O'Driscoll" Height="600" Width="1200" WindowStartupLocation="CenterScreen">
+        Title="Blackjack by Christopher O'Driscoll" Height="600" Width="1200" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
-        <Grid x:Name="mainGrid" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="197*"/>
+            <ColumnDefinition Width="43*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="mainGrid" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10"/>
                 <RowDefinition/>
@@ -283,7 +287,7 @@
                     <Label x:Name="lblPlayer3" Content="Player 3" Canvas.Left="10" Canvas.Top="96" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <Label x:Name="lblPlayer4" Content="Player 4" Canvas.Left="640" HorizontalAlignment="Center" Canvas.Top="96" VerticalAlignment="Top"/>
                     <Label x:Name="lblPlayer5" Content="Player 5" Canvas.Left="640" HorizontalAlignment="Center" Canvas.Top="249" VerticalAlignment="Top"/>
-                    <Label x:Name="lblStatePlayer1" Content="State" Canvas.Left="314" Canvas.Top="405"/>
+                    <Label x:Name="lblStatePlayer1" Content="State" Canvas.Left="315" Canvas.Top="405" FontSize="14" FontWeight="Bold"/>
                     <Label x:Name="lblStatePlayer2" Content="Label" Canvas.Left="252" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblStatePlayer3" Content="Label" Canvas.Left="252" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <Label x:Name="lblStatePlayer4" Content="Label" Canvas.Left="886" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -293,21 +297,21 @@
                     <ListBox x:Name="lstPlayer3Cards" Height="105" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="102" Canvas.Top="151" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <ListBox x:Name="lstPlayer4Cards" Height="104" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="734" Canvas.Top="144" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     <ListBox x:Name="lstPlayer5Cards" Height="105" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}" Canvas.Left="734" Canvas.Top="308" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <Label x:Name="lblFundsPlayer2" Content="Funds" Canvas.Left="72" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <Label x:Name="lblFundsPlayer1" Content="Funds" Canvas.Left="15" Canvas.Top="460" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <Label x:Name="lblFundsPlayer3" Content="Funds" Canvas.Left="73" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <Label x:Name="lblFundsPlayer4" Content="Funds" Canvas.Left="714" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <Label x:Name="lblFundsPlayer5" Content="Funds" Canvas.Left="707" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <Label Content="Pot" Canvas.Left="372" Canvas.Top="315" FontSize="24"/>
-                    <Label x:Name="lblPot" Content="0" Canvas.Left="469" Canvas.Top="293" FontSize="48" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <Label x:Name="lblFundsPlayer2" Content="Funds" Canvas.Left="110" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblFundsPlayer1" Content="Funds" Canvas.Left="152" Canvas.Top="405" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+                    <Label x:Name="lblFundsPlayer3" Content="Funds" Canvas.Left="110" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblFundsPlayer4" Content="Funds" Canvas.Left="740" Canvas.Top="96" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblFundsPlayer5" Content="Funds" Canvas.Left="740" Canvas.Top="249" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label Content="Pot:" Canvas.Left="410" Canvas.Top="191" FontSize="24"/>
+                    <Label x:Name="lblPot" Content="0" Canvas.Left="452" Canvas.Top="233" FontSize="48" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPlayer1" Content="Player 1" Canvas.Left="10" HorizontalAlignment="Center" Canvas.Top="405" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
                 </Canvas>
                 <Canvas x:Name="playerCanvas" Grid.Row="1" Background="#FFC08D8D" Panel.ZIndex="-1">
                     <Button x:Name="btnHit" Content="Hit" Click="btnHit_Click" Canvas.Left="686" Canvas.Top="10" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
                     <Button x:Name="btnStand" Content="Stand" Click="btnStand_Click" Canvas.Left="812" Canvas.Top="10" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
                     <Button x:Name="btnSurrender" Content="Surrender" Click="btnSurrender_Click" Canvas.Left="812" Canvas.Top="71" Width="100" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False"/>
                     <ListBox x:Name="lstPlayer1Cards" Height="120" Width="200" d:ItemsSource="{d:SampleData ItemCount=5}" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="458" Canvas.Top="11" Visibility="Hidden"/>
-                    <Label x:Name="lblHandValue" Content="HandValue" Canvas.Left="396" Canvas.Top="12" FontSize="72"/>
-                    <Label x:Name="lblPlayer1" Content="Player 1" Canvas.Left="10"/>
+                    <Label x:Name="lblHandValue" Content="0" Canvas.Left="396" Canvas.Top="12" FontSize="72"/>
                 </Canvas>
             </Grid>
             <Grid x:Name="infoGrid" Grid.Column="2" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.ActiveCaptionBrushKey}}">
@@ -341,7 +345,7 @@
                 <Button x:Name="btnSave" Content="Save Game" Margin="10,10,10,10" Grid.Row="2" IsEnabled="False" Click="btnSave_Click"/>
             </Grid>
         </Grid>
-        
+
 
     </Grid>
 </Window>

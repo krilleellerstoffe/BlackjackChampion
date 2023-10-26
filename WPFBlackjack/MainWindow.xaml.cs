@@ -1,10 +1,12 @@
 ﻿using CardGameLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Xml.Linq;
 using WPFBlackjackEL;
 
 namespace WPFBlackjack
@@ -27,16 +29,8 @@ namespace WPFBlackjack
             if (_gameManager != null)
             {
                 MessageBoxResult result = MessageBox.Show("Save '" + _gameManager.Players[1].PlayerName + "' to database?", "Exit game", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                switch (result)
-                {
-                    case MessageBoxResult.Yes:
-                        _gameManager.SavePlayerToDatabase();
-                        break;
-                    default:
-                        break;
-                }
+                if (result == MessageBoxResult.Yes) _gameManager.SavePlayerToDatabase();
             }
-
             base.OnClosed(e);
         }
         public MainWindow()
@@ -46,8 +40,26 @@ namespace WPFBlackjack
 
         public void StartGame()
         {
+            string[] randomNames = new string[_players + 1];
+            var uri = new Uri("pack://application:,,,/Resources/RandomNames.txt");
+            var info = Application.GetResourceStream(uri);
+            if (info != null)
+            {
+                using (var reader = new StreamReader(info.Stream))
+                {
+                    string text = reader.ReadToEnd();
+
+                    // Split the text into lines
+                    string[] lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    for (int i = 1; i < randomNames.Length; i++)
+                    {
+                        string newRandomName = lines[new Random().Next(lines.Length)];
+                        randomNames[i] = newRandomName.Trim();
+                    }
+                }
+            }
             //create new game based on setup
-            StartGame(new GameManager(_decks, _players));
+            StartGame(new GameManager(_decks, _players, randomNames));
         }
 
         public void StartGame(GameManager gamemanager)
@@ -114,12 +126,21 @@ namespace WPFBlackjack
             {
                 try
                 {
-                    if (i != 0) ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = _gameManager.Players[i].Funds;
+                    if (i != 0)
+                    {
+                        ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = _gameManager.Players[i].Funds;
+                        ((Label)tableCanvas.FindName("lblPlayer" + i)).Content = _gameManager.Players[i].PlayerName;
+
+                    }
                     ((Label)tableCanvas.FindName("lblStatePlayer" + i)).Content = _gameManager.Players[i].PlayerState;
                 }
                 catch
                 {
-                    if (i != 0) ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = "";
+                    if (i != 0)
+                    {
+                        ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = "";
+                    ((Label)tableCanvas.FindName("lblPlayer" + i)).Content = "Player " + i;
+                    }
                     ((Label)tableCanvas.FindName("lblStatePlayer" + i)).Content = "Not in Play";
                 }
             }
