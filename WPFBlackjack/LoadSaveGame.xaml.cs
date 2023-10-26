@@ -48,6 +48,7 @@ namespace WPFBlackjack
             if (lstSaveGames.SelectedItem != null)
             {
                 GameManager.RemoveSaveFromDatabase((GameState)lstSaveGames.SelectedItem);
+                UpdateSaveGameList();
             }
         }
 
@@ -58,7 +59,6 @@ namespace WPFBlackjack
                 GameManager loadedManager = GameManager.LoadGame((GameState)lstSaveGames.SelectedItem);
 
                 MainWindow.StartGame(loadedManager);
-
             }
         }
     }

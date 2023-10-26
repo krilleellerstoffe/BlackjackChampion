@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using WPFBlackjackDAL;
 using WPFBlackjackEL;
 
@@ -6,6 +7,7 @@ namespace CardGameLib
 {
     public class GameManager
     {
+        private StateofPlay _state;
         private Deck[] _decks;
         private Player[] _players;
         private Shoe _shoe;
@@ -36,6 +38,7 @@ namespace CardGameLib
             _players = gameState.Players.ToArray();
             _pot = gameState.Pot;
             _shoe = gameState.Shoe;
+            _state = gameState.State;
             SetupLoggers();
         }
 
@@ -213,6 +216,7 @@ namespace CardGameLib
                     player.PlayerState = Player.PlayerStates.OutOfPlay;
                 }
             }
+            State = StateofPlay.NewHand;
         }
         //pot gets split evenly between winners
         public void SplitPotToWinners()
@@ -247,16 +251,17 @@ namespace CardGameLib
             try
             {
                 // Retrieve the player you want to update
-                Player playerToUpdate = context.Players.FirstOrDefault(p => p.PlayerName == _players[1].PlayerName);
+                PlayerProfile currentProfile = new PlayerProfile(_players[1].PlayerName, _players[1].Funds);
+                PlayerProfile profileToUpdate = context.PlayerProfiles.FirstOrDefault(p => p.PlayerName == currentProfile.PlayerName);
 
-                if (playerToUpdate != null)
+                if (profileToUpdate != null)
                 {
                     // Modify the player's funds
-                    playerToUpdate.Funds = _players[1].Funds;
+                    profileToUpdate.Funds = currentProfile.Funds;
                 }
                 else
                 {
-                    context.Add(_players[1]);
+                    context.Add(currentProfile);
                 }
                 context.SaveChanges();
             }
@@ -265,11 +270,11 @@ namespace CardGameLib
                 Debug.WriteLine(ex.Message);
             }
         }
-        public static List<Player> GetPlayersFromDatabase()
+        public static List<PlayerProfile> GetPlayersFromDatabase()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            List<Player> players = (from player in context.Players
-                                    select player).ToList();
+            List<PlayerProfile> players = (from player in context.PlayerProfiles
+                                           select player).ToList();
             return players;
         }
         public static void RemovePlayerFromDatabase(Player selectedPlayer)
@@ -282,12 +287,11 @@ namespace CardGameLib
         public void SaveGame()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            GameState gameState = new GameState(_shoe, _players, _pot);
-            //if item originally from database, update instead of writing new object
-            context.Attach(_shoe);
+            GameState gameState = new GameState(_shoe, _players, _pot, _state);
+            context.Add(_shoe);
             foreach (Player player in _players)
             {
-                context.Attach(player);
+                context.Add(player);
             }
             context.Add(gameState);
             context.SaveChanges();
@@ -299,10 +303,13 @@ namespace CardGameLib
         }
         public static List<GameState> GetSaveGamesFromDatabase()
         {
-            //TODO work out why these are empty!!
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
-            List<GameState> saveGames = (from gameState in context.GameStates
-                                         select gameState).ToList();
+            List<GameState> saveGames = context.GameStates
+                .Include(gs => gs.Shoe)
+                .Include(gs => gs.Players)
+                    .ThenInclude(player => player.Hand)
+                        .ThenInclude(hand => hand.Cards)
+                .ToList();
             return saveGames;
         }
 
@@ -317,5 +324,6 @@ namespace CardGameLib
         public Player[] Players { get => _players; set => _players = value; }
         public Shoe Shoe { get => _shoe; set => _shoe = value; }
         public int Pot { get => _pot; set => _pot = value; }
+        public StateofPlay State { get => _state; set => _state = value; }
     }
 }

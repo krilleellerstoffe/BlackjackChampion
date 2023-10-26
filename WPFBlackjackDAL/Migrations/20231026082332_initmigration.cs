@@ -5,13 +5,13 @@
 namespace WPFBlackjackDAL.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class initmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Hand",
+                name: "Hands",
                 columns: table => new
                 {
                     HandId = table.Column<int>(type: "int", nullable: false)
@@ -20,11 +20,23 @@ namespace WPFBlackjackDAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Hand", x => x.HandId);
+                    table.PrimaryKey("PK_Hands", x => x.HandId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shoe",
+                name: "PlayerProfiles",
+                columns: table => new
+                {
+                    PlayerName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Funds = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerProfiles", x => x.PlayerName);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shoes",
                 columns: table => new
                 {
                     ShoeID = table.Column<int>(type: "int", nullable: false)
@@ -34,11 +46,11 @@ namespace WPFBlackjackDAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shoe", x => x.ShoeID);
+                    table.PrimaryKey("PK_Shoes", x => x.ShoeID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Card",
+                name: "Cards",
                 columns: table => new
                 {
                     CardID = table.Column<int>(type: "int", nullable: false)
@@ -51,16 +63,16 @@ namespace WPFBlackjackDAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Card", x => x.CardID);
+                    table.PrimaryKey("PK_Cards", x => x.CardID);
                     table.ForeignKey(
-                        name: "FK_Card_Hand_HandId",
+                        name: "FK_Cards_Hands_HandId",
                         column: x => x.HandId,
-                        principalTable: "Hand",
+                        principalTable: "Hands",
                         principalColumn: "HandId");
                     table.ForeignKey(
-                        name: "FK_Card_Shoe_ShoeID",
+                        name: "FK_Cards_Shoes_ShoeID",
                         column: x => x.ShoeID,
-                        principalTable: "Shoe",
+                        principalTable: "Shoes",
                         principalColumn: "ShoeID");
                 });
 
@@ -77,9 +89,9 @@ namespace WPFBlackjackDAL.Migrations
                 {
                     table.PrimaryKey("PK_GameStates", x => x.GameId);
                     table.ForeignKey(
-                        name: "FK_GameStates_Shoe_ShoeID",
+                        name: "FK_GameStates_Shoes_ShoeID",
                         column: x => x.ShoeID,
-                        principalTable: "Shoe",
+                        principalTable: "Shoes",
                         principalColumn: "ShoeID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -108,21 +120,21 @@ namespace WPFBlackjackDAL.Migrations
                         principalTable: "GameStates",
                         principalColumn: "GameId");
                     table.ForeignKey(
-                        name: "FK_Players_Hand_HandId",
+                        name: "FK_Players_Hands_HandId",
                         column: x => x.HandId,
-                        principalTable: "Hand",
+                        principalTable: "Hands",
                         principalColumn: "HandId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Card_HandId",
-                table: "Card",
+                name: "IX_Cards_HandId",
+                table: "Cards",
                 column: "HandId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Card_ShoeID",
-                table: "Card",
+                name: "IX_Cards_ShoeID",
+                table: "Cards",
                 column: "ShoeID");
 
             migrationBuilder.CreateIndex(
@@ -145,7 +157,10 @@ namespace WPFBlackjackDAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Card");
+                name: "Cards");
+
+            migrationBuilder.DropTable(
+                name: "PlayerProfiles");
 
             migrationBuilder.DropTable(
                 name: "Players");
@@ -154,10 +169,10 @@ namespace WPFBlackjackDAL.Migrations
                 name: "GameStates");
 
             migrationBuilder.DropTable(
-                name: "Hand");
+                name: "Hands");
 
             migrationBuilder.DropTable(
-                name: "Shoe");
+                name: "Shoes");
         }
     }
 }

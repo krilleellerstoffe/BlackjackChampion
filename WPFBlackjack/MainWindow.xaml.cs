@@ -13,7 +13,7 @@ namespace WPFBlackjack
     /// </summary>
     public partial class MainWindow : Window
     {
-        private GameManager gameManager;
+        private GameManager _gameManager;
         private setup setupWindow;
         private int _decks;
         private int _players;
@@ -23,13 +23,13 @@ namespace WPFBlackjack
         public int Players { get => _players; set => _players = value; }
         protected override void OnClosed(EventArgs e)
         {
-            if (gameManager != null)
+            if (_gameManager != null)
             {
-                MessageBoxResult result = MessageBox.Show("Save '" + gameManager.Players[1].PlayerName + "' to database?", "Exit game", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show("Save '" + _gameManager.Players[1].PlayerName + "' to database?", "Exit game", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        gameManager.SavePlayerToDatabase();
+                        _gameManager.SavePlayerToDatabase();
                         break;
                     default:
                         break;
@@ -48,27 +48,30 @@ namespace WPFBlackjack
         public void StartGame()
         {
             //create new game based on setup
-            gameManager = new GameManager(_decks, _players);
-            StartGame(gameManager);
+            StartGame(new GameManager(_decks, _players));
         }
 
-        public void StartGame(GameManager gameManager)
+        public void StartGame(GameManager gamemanager)
         {
+            _gameManager = gamemanager;
             //subscribe to events in gamemanager
-            gameManager.CardDrawn += UpdateInfoLabels;
-            gameManager.CardDrawn += ShowHideSingleDealerCard;
-            gameManager.CardDrawn += UpdatePlayerCards;
-            gameManager.Bust += ShowBustMessage;
-            gameManager.Bust += UpdateInfoLabels;
-            gameManager.Standing += ShowStandMessage;
-            gameManager.Standing += UpdateInfoLabels;
-            gameManager.Results += ShowHideAllDealerCards;
-            gameManager.Results += UpdateInfoLabels;
-            gameManager.Results += ShowWinners;
+            _gameManager.CardDrawn += UpdateInfoLabels;
+            _gameManager.CardDrawn += ShowHideSingleDealerCard;
+            _gameManager.CardDrawn += UpdatePlayerCards;
+            _gameManager.Bust += ShowBustMessage;
+            _gameManager.Bust += UpdateInfoLabels;
+            _gameManager.Standing += ShowStandMessage;
+            _gameManager.Standing += UpdateInfoLabels;
+            _gameManager.Results += ShowHideAllDealerCards;
+            _gameManager.Results += UpdateInfoLabels;
+            _gameManager.Results += ShowWinners;
             //now let user deal
-            btnNewhand.IsEnabled = true;
-            btnSave.IsEnabled = true;
+            _gameManager.State = StateofPlay.NewGame;
+            UpdateButtons();
+
             UpdateInfoLabels(null);
+            ShowHideAllDealerCards(null);
+            UpdatePlayerCards(null);
         }
         //winners popup and reset buttons
         private void ShowWinners(List<Player> winners)
@@ -79,12 +82,10 @@ namespace WPFBlackjack
                 winnerString += player.PlayerName + "\n";
             }
             MessageBox.Show(winnerString);
-            btnHit.IsEnabled = false;
-            btnStand.IsEnabled = false;
-            //gameManager.Stand(1);
-            btnNewhand.IsEnabled = true;
-            btnSurrender.IsEnabled = false;
-            gameManager.SplitPotToWinners();
+            _gameManager.State = StateofPlay.WinnerDeclared;
+            UpdateButtons();
+
+            _gameManager.SplitPotToWinners();
             UpdateInfoLabels(null);
 
         }
@@ -106,16 +107,23 @@ namespace WPFBlackjack
         private void UpdateInfoLabels(object? obj) => UpdateInfoLabels(obj, null);
         private void UpdateInfoLabels(object? obj, object? obj1)
         {
-            lblCardsInShoe.Content = gameManager.Shoe.Cards.Count;
-            lblDecks.Content = gameManager.Decks.Length;
-            lblPlayerCount.Content = gameManager.Players.Length - 1;
-            lblCardsSinceShuffle.Content = gameManager.Shoe.CardsSinceLastShuffle;
-            lblShuffle.Content = gameManager.Shoe.TimeToShuffle(_shuffleThreshold);
-            lblPot.Content = gameManager.Pot;
-            for (int i = 0; i < gameManager.Players.Length; i++)
+            lblCardsInShoe.Content = _gameManager.Shoe.Cards.Count;
+            lblPlayerCount.Content = _gameManager.Players.Length - 1;
+            lblCardsSinceShuffle.Content = _gameManager.Shoe.CardsSinceLastShuffle;
+            lblShuffle.Content = _gameManager.Shoe.TimeToShuffle(_shuffleThreshold);
+            lblPot.Content = _gameManager.Pot;
+            for (int i = 0; i < 5; i++)
             {
-                if (i != 0) ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = gameManager.Players[i].Funds;
-                ((Label)tableCanvas.FindName("lblStatePlayer" + i)).Content = gameManager.Players[i].PlayerState;
+                try
+                {
+                    if (i != 0) ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = _gameManager.Players[i].Funds;
+                    ((Label)tableCanvas.FindName("lblStatePlayer" + i)).Content = _gameManager.Players[i].PlayerState;
+                }
+                catch
+                {
+                    if (i != 0) ((Label)tableCanvas.FindName("lblFundsPlayer" + i)).Content = "";
+                    ((Label)tableCanvas.FindName("lblStatePlayer" + i)).Content = "Not in Play";
+                }
             }
         }
         //dealer gets special methods as we don't always want to reveal more than the first card
@@ -123,7 +131,7 @@ namespace WPFBlackjack
         private void ShowHideSingleDealerCard(object? obj, object? obj1)
         {
             lstDealerCards.Items.Clear();
-            foreach (Card card in gameManager.Players[0].Hand.Cards)
+            foreach (Card card in _gameManager.Players[0].Hand.Cards)
             {
                 lstDealerCards.Items.Add(card);
             }
@@ -140,18 +148,26 @@ namespace WPFBlackjack
         //reveal or hide all dealer cards
         private void ShowHideAllDealerCards(object? obj)
         {
-            for (int i = 0; i < lstDealerCards.Items.Count; i++)
+            for (int i = 1; i <= 7; i++)
             {
-                ((Image)tableCanvas.FindName("imgDealerCard" + (i + 1))).Visibility = Visibility.Hidden;
+                ((Image)tableCanvas.FindName("imgDealerCard" + i)).Visibility = Visibility.Hidden;
             }
             lstDealerCards.Items.Clear();
-            foreach (Card card in gameManager.Players[0].Hand.Cards)
+            try
             {
-                lstDealerCards.Items.Add(card);
+                foreach (Card card in _gameManager.Players[0].Hand.Cards)
+                {
+                    lstDealerCards.Items.Add(card);
+                }
+                for (int i = 0; i < lstDealerCards.Items.Count; i++)
+                {
+                    ShowImageBasedOnCard((Image)tableCanvas.FindName("imgDealerCard" + (i + 1)), (Card)lstDealerCards.Items[i]);
+                }
+
             }
-            for (int i = 0; i < lstDealerCards.Items.Count; i++)
+            catch (Exception ex)
             {
-                ShowImageBasedOnCard((Image)tableCanvas.FindName("imgDealerCard" + (i + 1)), (Card)lstDealerCards.Items[i]);
+                Logger.LogError(ex.Message);
             }
         }
         //create image based on card suit/value
@@ -167,76 +183,150 @@ namespace WPFBlackjack
         private void UpdatePlayerCards(object? obj) => UpdatePlayerCards(obj, null);
         private void UpdatePlayerCards(object? obj, object? obj1)
         {
-            for (int j = 1; j < gameManager.Players.Length; j++)
+            for (int j = 1; j < 5; j++)
             {
                 ListBox playerCards = (ListBox)playerCanvas.FindName("lstPlayer" + j + "Cards");
-                for (int i = 0; i < playerCards.Items.Count; i++)
+                for (int i = 1; i <= 7; i++)
                 {
-                    ((Image)tableCanvas.FindName("imgPlayer" + j + "Card" + (i + 1))).Visibility = Visibility.Hidden;
+                    ((Image)tableCanvas.FindName("imgPlayer" + j + "Card" + i)).Visibility = Visibility.Hidden;
                 }
-                playerCards.Items.Clear();
-                foreach (Card card in gameManager.Players[j].Hand.Cards)
+                try
                 {
-                    playerCards.Items.Add(card);
+                    playerCards.Items.Clear();
+                    foreach (Card card in _gameManager.Players[j].Hand.Cards)
+                    {
+                        playerCards.Items.Add(card);
+                    }
+                    for (int i = 0; i < playerCards.Items.Count; i++)
+                    {
+                        ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer" + j + "Card" + (i + 1)), (Card)playerCards.Items[i]);
+                    }
                 }
-                for (int i = 0; i < playerCards.Items.Count; i++)
+                catch
                 {
-                    ShowImageBasedOnCard((Image)tableCanvas.FindName("imgPlayer" + j + "Card" + (i + 1)), (Card)playerCards.Items[i]);
+                    //do nothing, just catch exception
                 }
+
+
             }
             if (lstPlayer1Cards.Items.Count >= 7) btnHit.IsEnabled = false;
-            lblHandValue.Content = gameManager.Players[1].Hand.HandValue();
+            lblHandValue.Content = _gameManager.Players[1].Hand.HandValue();
         }
         private void btnDeal_Click(object sender, RoutedEventArgs e)
         {
-            gameManager.Deal();
-            btnDeal.IsEnabled = false;
-            btnShuffle.IsEnabled = false;
-            btnHit.IsEnabled = true;
-            btnStand.IsEnabled = true;
-            btnSurrender.IsEnabled = true;
+            _gameManager.Deal();
+            _gameManager.State = StateofPlay.AfterDeal;
+            UpdateButtons();
+
         }
 
-        private void btnShuffle_Click(object sender, RoutedEventArgs e) => gameManager.Shoe.Shuffle();
+        private void btnShuffle_Click(object sender, RoutedEventArgs e) => _gameManager.Shoe.Shuffle();
 
         private void btnHit_Click(object sender, RoutedEventArgs e)
         {
-            btnSurrender.IsEnabled = false;
-            gameManager.Hit(gameManager.Players[1]);
+
+            _gameManager.Hit(_gameManager.Players[1]);
+            _gameManager.State = StateofPlay.AfterHit;
         }
 
         private void btnStand_Click(object sender, RoutedEventArgs e)
         {
-            btnHit.IsEnabled = false;
-            btnStand.IsEnabled = false;
-            gameManager.Stand(1);
-            btnNewhand.IsEnabled = true;
-            btnSurrender.IsEnabled = false;
+
+            _gameManager.Stand(1);
+            _gameManager.State = StateofPlay.PlayerStanding;
+            UpdateButtons();
             UpdateInfoLabels(sender);
         }
 
-        private void btnSurrender_Click(object sender, RoutedEventArgs e) => gameManager.Surrender();
+        private void btnSurrender_Click(object sender, RoutedEventArgs e)
+        {
+            _gameManager.Surrender();
+            _gameManager.State = StateofPlay.PlayerStanding;
+            UpdateButtons();
+        }
 
         private void btnNewhand_Click(object sender, RoutedEventArgs e)
         {
-            gameManager.NewHand();
-            btnDeal.IsEnabled = true;
-            btnShuffle.IsEnabled = true;
-            btnNewhand.IsEnabled = false;
-            btnHit.IsEnabled = false;
-            if (gameManager.Shoe.TimeToShuffle(_shuffleThreshold))
+            _gameManager.NewHand();
+
+            if (_gameManager.Shoe.TimeToShuffle(_shuffleThreshold))
             {
                 MessageBoxResult result = MessageBox.Show((_shuffleThreshold - 1) + "/" + _shuffleThreshold + " of the cards in the shoe" +
                     " have been used since you last shuffled, shuffle now?", "Shuffle cards in shoe?", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
-                    gameManager.Shoe.Shuffle();
+                    _gameManager.Shoe.Shuffle();
                 }
             }
+            _gameManager.State = StateofPlay.NewHand;
+            UpdateButtons();
             UpdateInfoLabels(null);
             UpdatePlayerCards(null);
             ShowHideAllDealerCards(null);
 
+        }
+
+        private void UpdateButtons()
+        {
+            switch (_gameManager.State)
+            {
+                case StateofPlay.NewGame:
+
+                    btnSave.IsEnabled = true;
+                    btnShuffle.IsEnabled = false;
+                    btnNewhand.IsEnabled = true;
+                    btnDeal.IsEnabled = false;
+                    btnHit.IsEnabled = false;
+                    btnStand.IsEnabled = false;
+                    btnSurrender.IsEnabled = false;
+                    break;
+                case StateofPlay.NewHand:
+                    btnSave.IsEnabled = true;
+                    btnShuffle.IsEnabled = true;
+                    btnNewhand.IsEnabled = false;
+                    btnDeal.IsEnabled = true;
+                    btnHit.IsEnabled = false;
+                    btnStand.IsEnabled = false;
+                    btnSurrender.IsEnabled = false;
+                    break;
+                case StateofPlay.AfterDeal:
+                    btnSave.IsEnabled= true;
+                    btnShuffle.IsEnabled = false;
+                    btnNewhand.IsEnabled = false;
+                    btnDeal.IsEnabled = false;
+                    btnHit.IsEnabled = true;
+                    btnStand.IsEnabled = true;
+                    btnSurrender.IsEnabled = true;
+                    break;
+                case StateofPlay.AfterHit:
+                    btnSave.IsEnabled= true;
+                    btnShuffle.IsEnabled = false;
+                    btnNewhand.IsEnabled = false;
+                    btnDeal.IsEnabled = false;
+                    btnHit.IsEnabled = true;
+                    btnStand.IsEnabled = true;
+                    btnSurrender.IsEnabled = false;
+                    break;
+                case StateofPlay.PlayerStanding:
+                case StateofPlay.WinnerDeclared:
+                    btnSave.IsEnabled= true;
+                    btnShuffle.IsEnabled= false;
+                    btnNewhand.IsEnabled = true;
+                    btnDeal.IsEnabled= false;
+                    btnHit.IsEnabled = false;
+                    btnStand.IsEnabled = false;
+                    btnSurrender.IsEnabled = false;
+                    break;
+                default:
+                    btnSave.IsEnabled = false;
+                    btnShuffle.IsEnabled = false;
+                    btnNewhand.IsEnabled = false;
+                    btnDeal.IsEnabled = false;
+                    btnHit.IsEnabled = false;
+                    btnStand.IsEnabled = false;
+                    btnSurrender.IsEnabled = false;
+                    break;
+            }
         }
 
         private void btnNewgame_Click(object sender, RoutedEventArgs e)
@@ -246,9 +336,12 @@ namespace WPFBlackjack
             setupWindow.Show();
         }
 
-        internal void LoadPlayer1(Player player)
+        internal void LoadPlayer1(PlayerProfile player)
         {
-            gameManager.insertPlayer(1, player);
+            Player newPlayer = new Player();
+            newPlayer.PlayerName = player.PlayerName;
+            newPlayer.Funds = player.Funds;
+            _gameManager.insertPlayer(1, newPlayer);
             lblPlayer1.Content = player.PlayerName;
             UpdateInfoLabels(null);
         }
@@ -261,8 +354,9 @@ namespace WPFBlackjack
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (gameManager == null) return;
-            gameManager.SaveGame();
+            if (_gameManager == null) return;
+            _gameManager.SaveGame();
+            MessageBox.Show("Game saved successfully");
         }
     }
 }

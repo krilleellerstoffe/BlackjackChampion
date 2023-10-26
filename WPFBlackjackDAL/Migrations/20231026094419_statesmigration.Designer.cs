@@ -12,8 +12,8 @@ using WPFBlackjackDAL;
 namespace WPFBlackjackDAL.Migrations
 {
     [DbContext(typeof(WPFBlackjackDbContext))]
-    [Migration("20231024150540_init")]
-    partial class init
+    [Migration("20231026094419_statesmigration")]
+    partial class statesmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,7 +55,7 @@ namespace WPFBlackjackDAL.Migrations
 
                     b.HasIndex("ShoeID");
 
-                    b.ToTable("Card");
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("WPFBlackjackEL.GameState", b =>
@@ -70,6 +70,9 @@ namespace WPFBlackjackDAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ShoeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.HasKey("GameId");
@@ -92,7 +95,7 @@ namespace WPFBlackjackDAL.Migrations
 
                     b.HasKey("HandId");
 
-                    b.ToTable("Hand");
+                    b.ToTable("Hands");
                 });
 
             modelBuilder.Entity("WPFBlackjackEL.Player", b =>
@@ -137,6 +140,19 @@ namespace WPFBlackjackDAL.Migrations
                     b.ToTable("Players");
                 });
 
+            modelBuilder.Entity("WPFBlackjackEL.PlayerProfile", b =>
+                {
+                    b.Property<string>("PlayerName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Funds")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlayerName");
+
+                    b.ToTable("PlayerProfiles");
+                });
+
             modelBuilder.Entity("WPFBlackjackEL.Shoe", b =>
                 {
                     b.Property<int>("ShoeID")
@@ -153,7 +169,7 @@ namespace WPFBlackjackDAL.Migrations
 
                     b.HasKey("ShoeID");
 
-                    b.ToTable("Shoe");
+                    b.ToTable("Shoes");
                 });
 
             modelBuilder.Entity("WPFBlackjackEL.Card", b =>

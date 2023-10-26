@@ -31,8 +31,8 @@ namespace WPFBlackjack
         private void ShowSavedPlayers()
         {
             lstSavedPlayers.Items.Clear();
-            List<Player> savedPlayers = GameManager.GetPlayersFromDatabase();
-            foreach (Player player in savedPlayers)
+            List<PlayerProfile> savedPlayers = GameManager.GetPlayersFromDatabase();
+            foreach (PlayerProfile player in savedPlayers)
             {
                 lstSavedPlayers.Items.Add(player);
             }
@@ -47,7 +47,7 @@ namespace WPFBlackjack
             ParentWindow.StartGame();
             if (lstSavedPlayers.SelectedItems.Count > 0)
             {
-                ParentWindow.LoadPlayer1((Player)lstSavedPlayers.SelectedItem);
+                ParentWindow.LoadPlayer1((PlayerProfile)lstSavedPlayers.SelectedItem);
             }
             else
             {

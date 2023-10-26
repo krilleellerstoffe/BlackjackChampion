@@ -41,9 +41,7 @@ namespace WPFBlackjack
         {
             if (txtName.Text.Length > 0)
             {
-                Player newPlayer = new Player();
-                newPlayer.PlayerName = txtName.Text;
-                newPlayer.Funds = 100;
+                PlayerProfile newPlayer = new PlayerProfile(txtName.Text, 100);
                 _parent.ParentWindow.LoadPlayer1(newPlayer);
                 this.Close();
             }

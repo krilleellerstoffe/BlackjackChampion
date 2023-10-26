@@ -7,15 +7,17 @@ namespace WPFBlackjackEL
     {
         private Shoe _shoe;
         private List<Player> _players;
+        private StateofPlay _state;
         private int _pot;
         private int _gameId;
 
         public GameState() { }
-        public GameState(Shoe shoe, Player[] players, int pot)
+        public GameState(Shoe shoe, Player[] players, int pot, StateofPlay state)
         {
             _shoe = shoe;
             _players = players.ToList();
             _pot = pot;
+            State = state;
         }
 
         [Required]
@@ -29,6 +31,7 @@ namespace WPFBlackjackEL
         [Required]
 
         public Shoe Shoe { get => _shoe; set => _shoe = value; }
+        public StateofPlay State { get => _state; set => _state = value; }
 
         public override string ToString()
         {

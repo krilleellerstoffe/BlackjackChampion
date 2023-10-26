@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WPFBlackjackEL
 {
@@ -20,6 +21,7 @@ namespace WPFBlackjackEL
         public Suits Suit { get => _suit; set => _suit = value; }
         public Values Value { get => _value; set => this._value = value; }
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CardID { get => _cardID; set => _cardID = value; }
 
         public int Score()
