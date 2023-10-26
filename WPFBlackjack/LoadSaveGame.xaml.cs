@@ -22,9 +22,10 @@ namespace WPFBlackjack
             {
                 cBoxPlayers.Items.Add(i);
             }
+            cBoxPlayers.Items.Add("Any number");
             MainWindow = mainWindow;
         }
-
+        //refresh the list from the database
         private void UpdateSaveGameList()
         {
             lstSaveGames.Items.Clear();
@@ -34,7 +35,7 @@ namespace WPFBlackjack
                 lstSaveGames.Items.Add(saveGame);
             }
         }
-
+        //enable/disable button based on selection
         private void lstSaveGames_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstSaveGames.SelectedItems.Count > 0)
@@ -48,7 +49,7 @@ namespace WPFBlackjack
                 btnLoadGame.IsEnabled = false;
             }
         }
-
+        //remove a saved gamestate fromt he database
         private void btnDeleteGame_Click(object sender, RoutedEventArgs e)
         {
             if (lstSaveGames.SelectedItem != null)
@@ -57,7 +58,7 @@ namespace WPFBlackjack
                 UpdateSaveGameList();
             }
         }
-
+        //select a saved gamestate to send to the gamemanager
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
         {
             if (lstSaveGames.SelectedItem != null)
@@ -67,7 +68,7 @@ namespace WPFBlackjack
                 MainWindow.StartGame(loadedManager);
             }
         }
-
+        //search gamestates for players that have a name matching input
         private void txtBoxName_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtBoxName.Text))
@@ -83,11 +84,11 @@ namespace WPFBlackjack
                 lstSaveGames.Items.Add(saveGame);
             }
         }
-
+        //search gamestates for games with the number of players selected
         private void cBoxPlayers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
-            if (cBoxPlayers.SelectedItem == null)
+            if (cBoxPlayers.SelectedIndex == 5)
             {
                 UpdateSaveGameList();
                 return;

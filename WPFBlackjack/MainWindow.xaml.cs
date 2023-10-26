@@ -24,20 +24,10 @@ namespace WPFBlackjack
 
         public int Decks { get => _decks; set => _decks = value; }
         public int Players { get => _players; set => _players = value; }
-        protected override void OnClosed(EventArgs e)
-        {
-            if (_gameManager != null)
-            {
-                MessageBoxResult result = MessageBox.Show("Save '" + _gameManager.Players[1].PlayerName + "' to database?", "Exit game", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes) _gameManager.SavePlayerToDatabase();
-            }
-            base.OnClosed(e);
-        }
         public MainWindow()
         {
             InitializeComponent();
         }
-
         public void StartGame()
         {
             string[] randomNames = new string[_players + 1];
@@ -61,7 +51,6 @@ namespace WPFBlackjack
             //create new game based on setup
             StartGame(new GameManager(_decks, _players, randomNames));
         }
-
         public void StartGame(GameManager gamemanager)
         {
             _gameManager = gamemanager;
@@ -84,6 +73,15 @@ namespace WPFBlackjack
             ShowHideAllDealerCards(null);
             UpdatePlayerCards(null);
         }
+        internal void LoadPlayer1(PlayerProfile player)
+        {
+            Player newPlayer = new Player();
+            newPlayer.PlayerName = player.PlayerName;
+            newPlayer.Funds = player.Funds;
+            _gameManager.insertPlayer(1, newPlayer);
+            lblPlayer1.Content = player.PlayerName;
+            UpdateInfoLabels(null);
+        }
         //winners popup and reset buttons
         private void ShowWinners(List<Player> winners)
         {
@@ -99,6 +97,7 @@ namespace WPFBlackjack
             UpdateInfoLabels(null);
 
         }
+        //popup if player standing
         public void ShowStandMessage(Player player)
         {
             //reveal cards if dealer
@@ -108,6 +107,7 @@ namespace WPFBlackjack
             }
             MessageBox.Show(player.PlayerName + " stands with " + player.Hand.HandValue());
         }
+        //popup if bust
         public void ShowBustMessage(Player player)
         {
             //only show popup if user goes bust
@@ -145,7 +145,6 @@ namespace WPFBlackjack
                 }
             }
         }
-        //dealer gets special methods as we don't always want to reveal more than the first card
         //reveal or hide first dealer card
         private void ShowHideSingleDealerCard(object? obj, object? obj1)
         {
@@ -189,15 +188,6 @@ namespace WPFBlackjack
                 Logger.LogError(ex.Message);
             }
         }
-        //create image based on card suit/value
-        private void ShowImageBasedOnCard(Image image, Card card)
-        {
-            image.Visibility = Visibility.Visible;
-            string cardString = card.ToString();
-            cardString = cardString.Replace(' ', '_');
-            image.Source = new BitmapImage(new Uri("Resources/" + cardString + ".png", UriKind.Relative));
-
-        }
         //refresh images for each player's cards - overloaded
         private void UpdatePlayerCards(object? obj) => UpdatePlayerCards(obj, null);
         private void UpdatePlayerCards(object? obj, object? obj1)
@@ -231,60 +221,15 @@ namespace WPFBlackjack
             if (lstPlayer1Cards.Items.Count >= 7) btnHit.IsEnabled = false;
             lblHandValue.Content = _gameManager.Players[1].Hand.HandValue();
         }
-        private void btnDeal_Click(object sender, RoutedEventArgs e)
+        //create image based on card suit/value
+        private void ShowImageBasedOnCard(Image image, Card card)
         {
-            _gameManager.Deal();
-            _gameManager.State = StateofPlay.AfterDeal;
-            UpdateButtons();
+            image.Visibility = Visibility.Visible;
+            string cardString = card.ToString();
+            cardString = cardString.Replace(' ', '_');
+            image.Source = new BitmapImage(new Uri("Resources/" + cardString + ".png", UriKind.Relative));
 
         }
-
-        private void btnShuffle_Click(object sender, RoutedEventArgs e) => _gameManager.Shoe.Shuffle();
-
-        private void btnHit_Click(object sender, RoutedEventArgs e)
-        {
-
-            _gameManager.Hit(_gameManager.Players[1]);
-            _gameManager.State = StateofPlay.AfterHit;
-        }
-
-        private void btnStand_Click(object sender, RoutedEventArgs e)
-        {
-
-            _gameManager.Stand(1);
-            _gameManager.State = StateofPlay.PlayerStanding;
-            UpdateButtons();
-            UpdateInfoLabels(sender);
-        }
-
-        private void btnSurrender_Click(object sender, RoutedEventArgs e)
-        {
-            _gameManager.Surrender();
-            _gameManager.State = StateofPlay.PlayerStanding;
-            UpdateButtons();
-        }
-
-        private void btnNewhand_Click(object sender, RoutedEventArgs e)
-        {
-            _gameManager.NewHand();
-
-            if (_gameManager.Shoe.TimeToShuffle(_shuffleThreshold))
-            {
-                MessageBoxResult result = MessageBox.Show((_shuffleThreshold - 1) + "/" + _shuffleThreshold + " of the cards in the shoe" +
-                    " have been used since you last shuffled, shuffle now?", "Shuffle cards in shoe?", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
-                {
-                    _gameManager.Shoe.Shuffle();
-                }
-            }
-            _gameManager.State = StateofPlay.NewHand;
-            UpdateButtons();
-            UpdateInfoLabels(null);
-            UpdatePlayerCards(null);
-            ShowHideAllDealerCards(null);
-
-        }
-
         private void UpdateButtons()
         {
             switch (_gameManager.State)
@@ -310,7 +255,6 @@ namespace WPFBlackjack
                     break;
             }
         }
-
         private void SetButtons(int[] integerArray)
         {
             bool[] enabledButtons = integerArray.Select(i => i != 0).ToArray();
@@ -323,35 +267,84 @@ namespace WPFBlackjack
             btnStand.IsEnabled = enabledButtons[5];
             btnSurrender.IsEnabled = enabledButtons[6];
         }
+        private void btnDeal_Click(object sender, RoutedEventArgs e)
+        {
+            _gameManager.Deal();
+            _gameManager.State = StateofPlay.AfterDeal;
+            UpdateButtons();
 
+        }
+        private void btnShuffle_Click(object sender, RoutedEventArgs e) => _gameManager.Shoe.Shuffle();
+        private void btnHit_Click(object sender, RoutedEventArgs e)
+        {
+
+            _gameManager.Hit(_gameManager.Players[1]);
+            _gameManager.State = StateofPlay.AfterHit;
+        }
+        private void btnStand_Click(object sender, RoutedEventArgs e)
+        {
+
+            _gameManager.Stand(1);
+            _gameManager.State = StateofPlay.PlayerStanding;
+            UpdateButtons();
+            UpdateInfoLabels(sender);
+        }
+        private void btnSurrender_Click(object sender, RoutedEventArgs e)
+        {
+            _gameManager.Surrender();
+            _gameManager.State = StateofPlay.PlayerStanding;
+            UpdateButtons();
+        }
+        private void btnNewhand_Click(object sender, RoutedEventArgs e)
+        {
+            _gameManager.NewHand();
+
+            if (_gameManager.Shoe.TimeToShuffle(_shuffleThreshold))
+            {
+                MessageBoxResult result = MessageBox.Show((_shuffleThreshold - 1) + "/" + _shuffleThreshold + " of the cards in the shoe" +
+                    " have been used since you last shuffled, shuffle now?", "Shuffle cards in shoe?", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    _gameManager.Shoe.Shuffle();
+                }
+            }
+            _gameManager.State = StateofPlay.NewHand;
+            UpdateButtons();
+            UpdateInfoLabels(null);
+            UpdatePlayerCards(null);
+            ShowHideAllDealerCards(null);
+
+        }
         private void btnNewgame_Click(object sender, RoutedEventArgs e)
         {
 
             setupWindow = new setup(this);
             setupWindow.Show();
         }
-
-        internal void LoadPlayer1(PlayerProfile player)
-        {
-            Player newPlayer = new Player();
-            newPlayer.PlayerName = player.PlayerName;
-            newPlayer.Funds = player.Funds;
-            _gameManager.insertPlayer(1, newPlayer);
-            lblPlayer1.Content = player.PlayerName;
-            UpdateInfoLabels(null);
-        }
-
         private void btnResume_Click(object sender, RoutedEventArgs e)
         {
             LoadSaveGame loadWindow = new LoadSaveGame(this);
             loadWindow.Show();
         }
-
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             if (_gameManager == null) return;
             _gameManager.SaveGame();
             MessageBox.Show("Game saved successfully");
+        }
+        //ask to save profile on exit
+        protected override void OnClosed(EventArgs e)
+        {
+            if (_gameManager != null)
+            {
+                MessageBoxResult result = MessageBox.Show("Save '" + _gameManager.Players[1].PlayerName + "' to database?", "Exit game", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes) _gameManager.SavePlayerToDatabase();
+            }
+            foreach (Window window in Application.Current.Windows)
+            {
+                window.Close();
+            }
+            base.OnClosed(e);
         }
     }
 }

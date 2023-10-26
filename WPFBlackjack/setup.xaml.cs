@@ -13,6 +13,7 @@ namespace WPFBlackjack
     public partial class setup : Window
     {
         private MainWindow parentWindow;
+        //populate combo boxes
         public setup(MainWindow parentWindow)
         {
             InitializeComponent();
@@ -27,7 +28,7 @@ namespace WPFBlackjack
             }
             ShowSavedPlayers();
         }
-
+        //load list of saved player profiles
         private void ShowSavedPlayers()
         {
             lstSavedPlayers.Items.Clear();
@@ -37,9 +38,9 @@ namespace WPFBlackjack
                 lstSavedPlayers.Items.Add(player);
             }
         }
-
+        //retrive the parent's window
         public MainWindow ParentWindow { get => parentWindow; }
-
+        //Setup game with either selected player or ask for new name
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
             ParentWindow.Decks = (int)cBoxDecks.SelectedItem;
@@ -56,7 +57,7 @@ namespace WPFBlackjack
             }
             this.Hide();
         }
-
+        //ask to remove player from database if delete key pressed
         private void lstSavedPlayers_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Delete)

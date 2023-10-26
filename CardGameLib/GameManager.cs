@@ -17,6 +17,7 @@ namespace CardGameLib
         private Player[] _players;
         private Shoe _shoe;
         private int _pot;
+        private int _defaultFunds = 100;
         private int _betAmount = 10; //hardcoded for now, will add option to change;
         private bool _winnersDeclared = false;
 
@@ -29,6 +30,7 @@ namespace CardGameLib
         public delegate void ResultsHandler(List<Player> winners);
         public event ResultsHandler Results;
 
+        //create new game
         public GameManager(int deckCount, int playerCount, string[] names)
         {
             SetDecks(deckCount);
@@ -37,7 +39,7 @@ namespace CardGameLib
             _shoe = new Shoe(_decks);
             _pot = 0;
         }
-
+        //create game from saved gamestate
         public GameManager(GameState gameState)
         {
             _players = gameState.Players.ToArray();
@@ -46,7 +48,7 @@ namespace CardGameLib
             _state = gameState.State;
             SetupLoggers();
         }
-
+        //update player details
         public void insertPlayer(int playerNumber, Player player)
         {
             try
@@ -58,6 +60,7 @@ namespace CardGameLib
                 Logger.LogError(e.Message);
             }
         }
+        //create new decks
         private void SetDecks(int deckCount)
         {
             _decks = new Deck[deckCount];
@@ -66,6 +69,7 @@ namespace CardGameLib
                 _decks[i] = new Deck();
             }
         }
+        //create players, their names, and give them some funds
         private void SetPlayers(int playerCount, string[] aiNames)
         {
             _players = new Player[playerCount + 1];
@@ -81,10 +85,11 @@ namespace CardGameLib
                     continue;
                 }
                 _players[i].PlayerName = "AI-" + aiNames[i];
-                _players[i].Funds = 100;
+                _players[i].Funds = _defaultFunds;
 
             }
         }
+        //set up event and error loggers
         private void SetupLoggers()
         {
             //first create loggers that subscribe to static Logger actions
@@ -96,9 +101,7 @@ namespace CardGameLib
             Bust += (player) => Logger.LogMessage(player.PlayerName + " went bust with " + player.Hand.HandValue());
             Results += LogWinners;
         }
-
-
-
+        //create a string of winners to send to the logger
         private void LogWinners(List<Player> winners)
         {
             string winnerString = "";
@@ -177,7 +180,6 @@ namespace CardGameLib
             if (CardDrawn != null) CardDrawn(player, newCard);
             CheckIfBust(player);
         }
-
         //AI will hit if hand under 18, otherwise stand
         public void AIHit(int playerNumber)
         {
@@ -247,8 +249,7 @@ namespace CardGameLib
             _players[1].Funds += _betAmount / 2;
             Stand(1);
         }
-
-
+        //Saves the current user's profile to the database
         public void SavePlayerToDatabase()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
@@ -256,7 +257,7 @@ namespace CardGameLib
             {
                 // Retrieve the player you want to update
                 PlayerProfile currentProfile = new PlayerProfile(_players[1].PlayerName, _players[1].Funds);
-                PlayerProfile profileToUpdate = context.PlayerProfiles.FirstOrDefault(p => p.PlayerName == currentProfile.PlayerName);
+                PlayerProfile? profileToUpdate = context.PlayerProfiles.FirstOrDefault(p => p.PlayerName == currentProfile.PlayerName);
 
                 if (profileToUpdate != null)
                 {
@@ -265,6 +266,7 @@ namespace CardGameLib
                 }
                 else
                 {
+                    //otherwise create a new entry in the database
                     context.Add(currentProfile);
                 }
                 context.SaveChanges();
@@ -274,6 +276,7 @@ namespace CardGameLib
                 Debug.WriteLine(ex.Message);
             }
         }
+        //retrieve a list of profiles that are saved in the database
         public static List<PlayerProfile> GetPlayersFromDatabase()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
@@ -281,13 +284,14 @@ namespace CardGameLib
                                            select player).ToList();
             return players;
         }
+        //delete a player progile from the database
         public static void RemovePlayerFromDatabase(Player selectedPlayer)
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
             context.Remove(selectedPlayer);
             context.SaveChanges();
         }
-
+        //create a gamestate and save it to the database
         public void SaveGame()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
@@ -310,11 +314,12 @@ namespace CardGameLib
             context.Add(gameState);
             context.SaveChanges();
         }
-
+        //create a new gamemanager based on the loaded gamestate
         public static GameManager LoadGame(GameState savedGame)
         {
             return new GameManager(savedGame);
         }
+        //retrieve a list of gamestates saved in the database
         public static List<GameState> GetSaveGamesFromDatabase()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
@@ -328,15 +333,13 @@ namespace CardGameLib
                 .ToList();
             return saveGames;
         }
-
+        //remove a saved gamestate from the database
         public static void RemoveSaveFromDatabase(GameState saveGame)
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
             context.Remove(saveGame);
             context.SaveChanges();
         }
-
-        public Deck[] Decks { get => _decks; set => _decks = value; }
         public Player[] Players { get => _players; set => _players = value; }
         public Shoe Shoe { get => _shoe; set => _shoe = value; }
         public int Pot { get => _pot; set => _pot = value; }

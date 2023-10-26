@@ -35,7 +35,13 @@ namespace WPFBlackjackEL
 
         public override string ToString()
         {
-            return "Game " + GameId + ": " + (Players.Count -1) + " players, " + Pot + " gold in pot";
+            string playerString = "";
+            foreach (var player in _players)
+            {
+                if (player.PlayerName == "Dealer") continue;
+                playerString += player.PlayerName + ", ";
+            }
+            return "Game " + GameId + ": " + (Players.Count -1) + " players: " + playerString + Pot + " gold in pot";
 
         }
     }
