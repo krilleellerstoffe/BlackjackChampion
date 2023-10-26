@@ -15,5 +15,10 @@ namespace WPFBlackjackEL
         [Key]
         public string PlayerName { get => playerName; set => playerName = value; }
         public int Funds { get => funds; set => funds = value; }
+
+        public override string ToString()
+        {
+            return PlayerName + " (" + Funds + " gold)";
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using CardGameLib;
+using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using WPFBlackjackEL;
@@ -16,6 +18,10 @@ namespace WPFBlackjack
         {
             InitializeComponent();
             UpdateSaveGameList();
+            for (int i = 1; i <= 5; i++)
+            {
+                cBoxPlayers.Items.Add(i);
+            }
             MainWindow = mainWindow;
         }
 
@@ -59,6 +65,39 @@ namespace WPFBlackjack
                 GameManager loadedManager = GameManager.LoadGame((GameState)lstSaveGames.SelectedItem);
 
                 MainWindow.StartGame(loadedManager);
+            }
+        }
+
+        private void txtBoxName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtBoxName.Text))
+            {
+                UpdateSaveGameList();
+                return;
+            }
+            lstSaveGames.Items.Clear();
+            List<GameState> saveGames = GameManager.GetSaveGamesFromDatabase();
+            saveGames = saveGames.Where(game => game.Players.Any(player => player.PlayerName.Contains(txtBoxName.Text))).ToList();
+            foreach (GameState saveGame in saveGames)
+            {
+                lstSaveGames.Items.Add(saveGame);
+            }
+        }
+
+        private void cBoxPlayers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            if (cBoxPlayers.SelectedItem == null)
+            {
+                UpdateSaveGameList();
+                return;
+            }
+            lstSaveGames.Items.Clear();
+            List<GameState> saveGames = GameManager.GetSaveGamesFromDatabase();
+            saveGames = saveGames.Where(game => game.Players.Count == (int)cBoxPlayers.SelectedItem + 1).ToList();
+            foreach (GameState saveGame in saveGames)
+            {
+                lstSaveGames.Items.Add(saveGame);
             }
         }
     }

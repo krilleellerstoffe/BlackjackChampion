@@ -288,9 +288,19 @@ namespace CardGameLib
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
             GameState gameState = new GameState(_shoe, _players, _pot, _state);
+            //make sure each item is saved correctly by explicitly adding items
+            foreach (Card card in Shoe.Cards)
+            {
+                context.Add(card);
+            }
             context.Add(_shoe);
             foreach (Player player in _players)
             {
+                foreach (Card card in player.Hand.Cards)
+                {
+                    context.Add(card);
+                }
+                context.Add(player.Hand);
                 context.Add(player);
             }
             context.Add(gameState);
@@ -304,8 +314,10 @@ namespace CardGameLib
         public static List<GameState> GetSaveGamesFromDatabase()
         {
             using WPFBlackjackDbContext context = new WPFBlackjackDbContext();
+            //explicity load entities to defeat lazy loading
             List<GameState> saveGames = context.GameStates
                 .Include(gs => gs.Shoe)
+                    .ThenInclude(shoe => shoe.Cards)
                 .Include(gs => gs.Players)
                     .ThenInclude(player => player.Hand)
                         .ThenInclude(hand => hand.Cards)

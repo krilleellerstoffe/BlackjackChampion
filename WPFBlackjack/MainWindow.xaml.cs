@@ -1,6 +1,7 @@
 ﻿using CardGameLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -37,8 +38,6 @@ namespace WPFBlackjack
             }
 
             base.OnClosed(e);
-
-            Application.Current.Shutdown();
         }
         public MainWindow()
         {
@@ -81,10 +80,9 @@ namespace WPFBlackjack
             {
                 winnerString += player.PlayerName + "\n";
             }
-            MessageBox.Show(winnerString);
             _gameManager.State = StateofPlay.WinnerDeclared;
             UpdateButtons();
-
+            MessageBox.Show(winnerString);
             _gameManager.SplitPotToWinners();
             UpdateInfoLabels(null);
 
@@ -112,7 +110,7 @@ namespace WPFBlackjack
             lblCardsSinceShuffle.Content = _gameManager.Shoe.CardsSinceLastShuffle;
             lblShuffle.Content = _gameManager.Shoe.TimeToShuffle(_shuffleThreshold);
             lblPot.Content = _gameManager.Pot;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i <= 5; i++)
             {
                 try
                 {
@@ -183,7 +181,7 @@ namespace WPFBlackjack
         private void UpdatePlayerCards(object? obj) => UpdatePlayerCards(obj, null);
         private void UpdatePlayerCards(object? obj, object? obj1)
         {
-            for (int j = 1; j < 5; j++)
+            for (int j = 1; j <= 5; j++)
             {
                 ListBox playerCards = (ListBox)playerCanvas.FindName("lstPlayer" + j + "Cards");
                 for (int i = 1; i <= 7; i++)
@@ -271,62 +269,38 @@ namespace WPFBlackjack
             switch (_gameManager.State)
             {
                 case StateofPlay.NewGame:
-
-                    btnSave.IsEnabled = true;
-                    btnShuffle.IsEnabled = false;
-                    btnNewhand.IsEnabled = true;
-                    btnDeal.IsEnabled = false;
-                    btnHit.IsEnabled = false;
-                    btnStand.IsEnabled = false;
-                    btnSurrender.IsEnabled = false;
+                case StateofPlay.WinnerDeclared:
+                    SetButtons(new int[] { 1, 0, 1, 0, 0, 0, 0 });
                     break;
                 case StateofPlay.NewHand:
-                    btnSave.IsEnabled = true;
-                    btnShuffle.IsEnabled = true;
-                    btnNewhand.IsEnabled = false;
-                    btnDeal.IsEnabled = true;
-                    btnHit.IsEnabled = false;
-                    btnStand.IsEnabled = false;
-                    btnSurrender.IsEnabled = false;
+                    SetButtons(new int[] { 1, 1, 0, 1, 0, 0, 0 });
                     break;
                 case StateofPlay.AfterDeal:
-                    btnSave.IsEnabled= true;
-                    btnShuffle.IsEnabled = false;
-                    btnNewhand.IsEnabled = false;
-                    btnDeal.IsEnabled = false;
-                    btnHit.IsEnabled = true;
-                    btnStand.IsEnabled = true;
-                    btnSurrender.IsEnabled = true;
+                    SetButtons(new int[] { 1, 0, 0, 0, 1, 1, 1 });
                     break;
                 case StateofPlay.AfterHit:
-                    btnSave.IsEnabled= true;
-                    btnShuffle.IsEnabled = false;
-                    btnNewhand.IsEnabled = false;
-                    btnDeal.IsEnabled = false;
-                    btnHit.IsEnabled = true;
-                    btnStand.IsEnabled = true;
-                    btnSurrender.IsEnabled = false;
+                    SetButtons(new int[] { 1, 0, 0, 0, 1, 1, 0 });
                     break;
                 case StateofPlay.PlayerStanding:
-                case StateofPlay.WinnerDeclared:
-                    btnSave.IsEnabled= true;
-                    btnShuffle.IsEnabled= false;
-                    btnNewhand.IsEnabled = true;
-                    btnDeal.IsEnabled= false;
-                    btnHit.IsEnabled = false;
-                    btnStand.IsEnabled = false;
-                    btnSurrender.IsEnabled = false;
+                    SetButtons(new int[] { 1, 0, 1, 0, 0, 0, 0 });
                     break;
                 default:
-                    btnSave.IsEnabled = false;
-                    btnShuffle.IsEnabled = false;
-                    btnNewhand.IsEnabled = false;
-                    btnDeal.IsEnabled = false;
-                    btnHit.IsEnabled = false;
-                    btnStand.IsEnabled = false;
-                    btnSurrender.IsEnabled = false;
+                    SetButtons(new int[] { 0, 0, 0, 0, 0, 0, 0 });
                     break;
             }
+        }
+
+        private void SetButtons(int[] integerArray)
+        {
+            bool[] enabledButtons = integerArray.Select(i => i != 0).ToArray();
+
+            btnSave.IsEnabled = enabledButtons[0];
+            btnShuffle.IsEnabled = enabledButtons[1];
+            btnNewhand.IsEnabled = enabledButtons[2];
+            btnDeal.IsEnabled = enabledButtons[3];
+            btnHit.IsEnabled = enabledButtons[4];
+            btnStand.IsEnabled = enabledButtons[5];
+            btnSurrender.IsEnabled = enabledButtons[6];
         }
 
         private void btnNewgame_Click(object sender, RoutedEventArgs e)
